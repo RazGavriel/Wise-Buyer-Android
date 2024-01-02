@@ -1,3 +1,3 @@
 package com.app.wisebuyer.login
 
-class LoginModel {}
+data class UserCredentials(val username: String, val password: String)
