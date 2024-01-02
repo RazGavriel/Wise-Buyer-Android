@@ -1,6 +1,5 @@
 package com.app.wisebuyer.login
 
-import android.graphics.Color
 import com.app.wisebuyer.R
 import android.os.Bundle
 import android.util.Log
@@ -14,17 +13,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 
-
 class LoginFragment : Fragment() {
 
     private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var emailInput : EditText
     private lateinit var passwordInput : EditText
     private lateinit var loginButton: Button
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(
             R.layout.fragment_login, container, false
