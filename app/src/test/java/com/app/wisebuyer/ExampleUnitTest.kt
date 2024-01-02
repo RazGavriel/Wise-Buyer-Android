@@ -1,4 +1,4 @@
-package com.example.wisebuyer
+package com.app.wisebuyer
 
 import org.junit.Test
 
