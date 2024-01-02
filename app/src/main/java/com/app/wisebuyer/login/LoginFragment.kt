@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 
 
 class LoginFragment : Fragment() {
@@ -29,7 +30,6 @@ class LoginFragment : Fragment() {
         val passwordInput = view.findViewById<EditText>(R.id.password_input)
 
         val button:Button = view.findViewById<Button>(R.id.login_button)
-        button.setBackgroundColor(Color.parseColor("#00FF00"))
 
         button.setOnClickListener {
             Log.v("APP", "Login button clicked")
@@ -40,8 +40,10 @@ class LoginFragment : Fragment() {
         // For example, update UI based on the login result
         // result is the value emitted by the LiveData
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Boolean ->
-            button.setBackgroundColor(Color.parseColor("#FF0000"))
             Log.v("APP", "login result: $result")
+            if(result){
+                findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
+            }
         }
         return view
     }

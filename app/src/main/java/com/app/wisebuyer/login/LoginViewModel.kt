@@ -13,7 +13,7 @@ class LoginViewModel: ViewModel() {
         // In a real-world scenario, you would perform actual login logic here.
         // For this example, let's use simple mock data.
         val mockUsername = "matan"
-        val mockPassword = "password1!"
+        val mockPassword = "123"
 
         val isLoginSuccessful = credentials.username == mockUsername &&
                 credentials.password == mockPassword
