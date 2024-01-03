@@ -43,7 +43,7 @@ class LoginFragment : Fragment() {
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Boolean ->
             Log.v("APP", "login result: $result")
             if (result) {
-                findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
+                findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
             }
         }
     }
