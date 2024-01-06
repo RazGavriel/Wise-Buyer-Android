@@ -1,5 +1,6 @@
 package com.app.wisebuyer.login
 
+import android.annotation.SuppressLint
 import com.app.wisebuyer.R
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -19,23 +21,28 @@ class LoginFragment : Fragment() {
     private lateinit var emailInput : EditText
     private lateinit var passwordInput : EditText
     private lateinit var loginButton: Button
+    private lateinit var signInButton: Button
+    private lateinit var messageBox : TextView
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
-        // Inflate the layout for this fragment
         val view: View = inflater.inflate(
             R.layout.fragment_login, container, false
         )
         emailInput = view.findViewById<EditText>(R.id.email_input)
         passwordInput = view.findViewById<EditText>(R.id.password_input)
         loginButton = view.findViewById<Button>(R.id.login_button)
+        signInButton = view.findViewById<Button>(R.id.sign_in_button)
+        messageBox = view.findViewById<TextView>(R.id.message_box)
 
-        handleButtonClick(loginButton)
-        // Handle the result here
+        handleLoginClick(loginButton)
+        handleSignUpClick(signInButton)
         observeLoginResult()
+
         return view
     }
 
@@ -43,19 +50,29 @@ class LoginFragment : Fragment() {
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Boolean ->
             Log.v("APP", "login result: $result")
             if (result) {
-                findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
+                findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
+            }
+            else {
+                messageBox.visibility = View.VISIBLE
+                messageBox.text = "Invalid Credentials"
             }
         }
     }
 
-    private fun handleButtonClick(loginButton:Button) {
+    private fun handleLoginClick(loginButton:Button) {
         loginButton.setOnClickListener {
+            messageBox.visibility = View.INVISIBLE
             Log.v("APP", "Login button clicked")
             val credentials =
                 UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
             if (checkAllFields(credentials)) {
                 loginViewModel.loginUser(credentials)
             }
+        }
+    }
+    private fun handleSignUpClick(signInButton:Button) {
+        signInButton.setOnClickListener{
+            findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
         }
     }
 
