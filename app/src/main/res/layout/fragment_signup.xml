@@ -57,7 +57,7 @@
         app:boxBackgroundColor="#F5F5F5">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailSignUpEditText"
+            android:id="@+id/email_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/emailHintSignUp"/>
@@ -82,7 +82,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/sign_up_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

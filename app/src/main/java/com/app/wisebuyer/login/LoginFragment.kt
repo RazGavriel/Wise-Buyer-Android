@@ -21,7 +21,7 @@ class LoginFragment : Fragment() {
     private lateinit var emailInput : EditText
     private lateinit var passwordInput : EditText
     private lateinit var loginButton: Button
-    private lateinit var signInButton: Button
+    private lateinit var signupButton: Button
     private lateinit var messageBox : TextView
 
     @SuppressLint("MissingInflatedId")
@@ -36,11 +36,11 @@ class LoginFragment : Fragment() {
         emailInput = view.findViewById<EditText>(R.id.email_input)
         passwordInput = view.findViewById<EditText>(R.id.password_input)
         loginButton = view.findViewById<Button>(R.id.login_button)
-        signInButton = view.findViewById<Button>(R.id.sign_in_button)
+        signupButton = view.findViewById<Button>(R.id.sign_up_button)
         messageBox = view.findViewById<TextView>(R.id.message_box)
 
         handleLoginClick(loginButton)
-        handleSignUpClick(signInButton)
+        handleSignUpClick(signupButton)
         observeLoginResult()
 
         return view
@@ -63,15 +63,14 @@ class LoginFragment : Fragment() {
         loginButton.setOnClickListener {
             messageBox.visibility = View.INVISIBLE
             Log.v("APP", "Login button clicked")
-            val credentials =
-                UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
+            val credentials = UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
             if (checkAllFields(credentials)) {
                 loginViewModel.loginUser(credentials)
             }
         }
     }
-    private fun handleSignUpClick(signInButton:Button) {
-        signInButton.setOnClickListener{
+    private fun handleSignUpClick(signupButton:Button) {
+        signupButton.setOnClickListener{
             findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
         }
     }

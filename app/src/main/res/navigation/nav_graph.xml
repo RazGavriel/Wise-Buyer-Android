@@ -22,5 +22,9 @@
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.app.wisebuyer.singup.SignupFragment"
-        android:label="SignupFragment" />
+        android:label="SignupFragment" >
+        <action
+            android:id="@+id/action_signupFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>
