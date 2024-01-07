@@ -18,6 +18,10 @@ class LoginViewModel: ViewModel() {
         auth.signInWithEmailAndPassword(credentials.email, credentials.password)
             .addOnCompleteListener { task ->
                 _loginResult.value = task.isSuccessful
-        }
+            }
+    }
+
+    fun clearLoginResult() {
+        _loginResult.value = false
     }
 }

@@ -18,7 +18,11 @@
     <fragment
         android:id="@+id/postsFragment"
         android:name="com.app.wisebuyer.posts.PostsFragment"
-        android:label="PostsFragment" />
+        android:label="PostsFragment" >
+        <action
+            android:id="@+id/action_postsFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.app.wisebuyer.singup.SignupFragment"

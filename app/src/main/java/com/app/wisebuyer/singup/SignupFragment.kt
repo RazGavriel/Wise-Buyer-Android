@@ -45,6 +45,24 @@ class SignupFragment: Fragment() {
         return view
     }
 
+    override fun onResume() {
+        Log.v("APP", "signup resume")
+        resetParameters()
+        super.onResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        signUpViewModel.clearSignUpResult()
+    }
+
+    private fun resetParameters(){
+        emailInput.text.clear()
+        passwordInput.text.clear()
+        messageBox.text = ""
+    }
+
+    @SuppressLint("SetTextI18n")
     private fun observeSignUpResult() {
         signUpViewModel.signUpResult.observe(viewLifecycleOwner) { result: Boolean ->
             Log.v("APP", "signUp result: $result")
@@ -53,7 +71,7 @@ class SignupFragment: Fragment() {
             }
             else {
                 messageBox.visibility = View.VISIBLE
-                messageBox.text = "The email is already in use."
+                messageBox.text = "The email is already in use"
             }
         }
     }

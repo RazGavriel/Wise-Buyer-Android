@@ -45,7 +45,17 @@ class LoginFragment : Fragment() {
 
         return view
     }
+    override fun onResume() {
+        Log.v("APP", "login resume")
+        resetParameters()
+        super.onResume()
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        loginViewModel.clearLoginResult()
+    }
 
+    @SuppressLint("SetTextI18n")
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Boolean ->
             Log.v("APP", "login result: $result")
@@ -90,5 +100,11 @@ class LoginFragment : Fragment() {
         }
         else{ return true }
         return false
+    }
+
+    private fun resetParameters(){
+        emailInput.text.clear()
+        passwordInput.text.clear()
+        messageBox.text = ""
     }
 }

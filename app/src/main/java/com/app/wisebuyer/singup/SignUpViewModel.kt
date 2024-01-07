@@ -20,4 +20,8 @@ class SignUpViewModel : ViewModel() {
                 _signUpResult.value = task.isSuccessful
         }
     }
+
+    fun clearSignUpResult() {
+        _signUpResult.value = false
+    }
 }
