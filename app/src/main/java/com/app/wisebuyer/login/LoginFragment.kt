@@ -1,9 +1,7 @@
 package com.app.wisebuyer.login
 
-import android.annotation.SuppressLint
 import com.app.wisebuyer.R
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +22,6 @@ class LoginFragment : Fragment() {
     private lateinit var signupButton: Button
     private lateinit var messageBox : TextView
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,7 +43,6 @@ class LoginFragment : Fragment() {
         return view
     }
     override fun onResume() {
-        Log.v("APP", "login resume")
         resetParameters()
         super.onResume()
     }
@@ -55,16 +51,14 @@ class LoginFragment : Fragment() {
         loginViewModel.clearLoginResult()
     }
 
-    @SuppressLint("SetTextI18n")
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Boolean ->
-            Log.v("APP", "login result: $result")
             if (result) {
                 findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
             }
             else {
                 messageBox.visibility = View.VISIBLE
-                messageBox.text = "Invalid Credentials"
+                messageBox.text = getString(R.string.invalidCreds)
             }
         }
     }
@@ -72,7 +66,6 @@ class LoginFragment : Fragment() {
     private fun handleLoginClick(loginButton:Button) {
         loginButton.setOnClickListener {
             messageBox.visibility = View.INVISIBLE
-            Log.v("APP", "Login button clicked")
             val credentials = UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
             if (checkAllFields(credentials)) {
                 loginViewModel.loginUser(credentials)

@@ -1,8 +1,6 @@
 package com.app.wisebuyer.singup
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.app.wisebuyer.R
-import com.app.wisebuyer.login.LoginViewModel
 import com.app.wisebuyer.login.UserCredentials
 
 class SignupFragment: Fragment() {
@@ -25,13 +22,11 @@ class SignupFragment: Fragment() {
     private lateinit var signUpButton: Button
     private lateinit var messageBox : TextView
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
-        // Inflate the layout for this fragment
         val view: View = inflater.inflate(
             R.layout.fragment_signup, container, false
         )
@@ -46,7 +41,6 @@ class SignupFragment: Fragment() {
     }
 
     override fun onResume() {
-        Log.v("APP", "signup resume")
         resetParameters()
         super.onResume()
     }
@@ -62,23 +56,20 @@ class SignupFragment: Fragment() {
         messageBox.text = ""
     }
 
-    @SuppressLint("SetTextI18n")
     private fun observeSignUpResult() {
         signUpViewModel.signUpResult.observe(viewLifecycleOwner) { result: Boolean ->
-            Log.v("APP", "signUp result: $result")
             if (result) {
                 findNavController().navigate(R.id.action_signupFragment_to_loginFragment)
             }
             else {
                 messageBox.visibility = View.VISIBLE
-                messageBox.text = "The email is already in use"
+                messageBox.text = getString(R.string.EmailInUseString)
             }
         }
     }
     private fun handleSignUpClick(signUpButton:Button) {
         signUpButton.setOnClickListener{
             messageBox.visibility = View.INVISIBLE
-            Log.v("APP", "signUp button clicked")
             val credentials = UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
             if (checkAllFields(credentials)) {
                 signUpViewModel.signUpUser(credentials)

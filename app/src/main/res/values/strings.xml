@@ -6,4 +6,6 @@
     <string name="passwordHintSignUp">Password</string>
     <string name="signUpString">Sign Up</string>
     <string name="loginString">Login</string>
+    <string name="EmailInUseString">The email is already in use</string>
+    <string name="invalidCreds">Invalid Credentials</string>
 </resources>
