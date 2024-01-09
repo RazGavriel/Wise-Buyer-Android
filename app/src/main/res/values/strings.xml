@@ -8,4 +8,6 @@
     <string name="loginString">Login</string>
     <string name="EmailInUseString">The email is already in use</string>
     <string name="invalidCreds">Invalid Credentials</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
 </resources>

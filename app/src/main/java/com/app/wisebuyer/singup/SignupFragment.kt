@@ -13,12 +13,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.app.wisebuyer.R
 import com.app.wisebuyer.login.UserCredentials
+import com.app.wisebuyer.login.UserMetaData
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class SignupFragment: Fragment() {
 
     private val signUpViewModel: SignUpViewModel by activityViewModels()
     private lateinit var emailInput : EditText
     private lateinit var passwordInput : EditText
+    private lateinit var firstNameInput : EditText
+    private lateinit var lastNameInput : EditText
     private lateinit var signUpButton: Button
     private lateinit var messageBox : TextView
 
@@ -32,8 +37,11 @@ class SignupFragment: Fragment() {
         )
         emailInput = view.findViewById<EditText>(R.id.email_input)
         passwordInput = view.findViewById<EditText>(R.id.password_input)
+        firstNameInput = view.findViewById<EditText>(R.id.first_name_input)
+        lastNameInput = view.findViewById<EditText>(R.id.last_name_input)
         signUpButton = view.findViewById<Button>(R.id.sign_up_button)
         messageBox = view.findViewById<TextView>(R.id.message_box)
+
 
         handleSignUpClick(signUpButton)
         observeSignUpResult()
@@ -71,13 +79,26 @@ class SignupFragment: Fragment() {
         signUpButton.setOnClickListener{
             messageBox.visibility = View.INVISIBLE
             val credentials = UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
-            if (checkAllFields(credentials)) {
-                signUpViewModel.signUpUser(credentials)
+            val userMetaData = UserMetaData(firstNameInput.text.toString(), lastNameInput.text.toString())
+            if (checkCredentials(credentials) && checkMetaData(userMetaData) ) {
+                signUpViewModel.signUpUser(credentials, userMetaData)
             }
         }
     }
 
-    private fun checkAllFields(credentials: UserCredentials): Boolean{
+    private fun checkMetaData(userMetaData: UserMetaData): Boolean {
+        if (userMetaData.firstName.isEmpty() || !isString(userMetaData.firstName)){
+            firstNameInput.error = "Enter valid first name"
+        }
+        else if (userMetaData.lastName.isEmpty() || !isString(userMetaData.lastName)){
+            lastNameInput.error = "Enter valid last name"
+        }
+        else{ return true }
+        return false
+
+    }
+
+    private fun checkCredentials(credentials: UserCredentials) : Boolean{
         if (credentials.email.isEmpty()){
             emailInput.error = "Enter a email"
         }
@@ -92,5 +113,9 @@ class SignupFragment: Fragment() {
         }
         else{ return true }
         return false
+    }
+
+    private fun isString(value: String): Boolean {
+        return value.all { it.isLetter() }
     }
 }
