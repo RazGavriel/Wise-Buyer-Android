@@ -14,8 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.app.wisebuyer.R
 import com.app.wisebuyer.login.UserCredentials
 import com.app.wisebuyer.login.UserMetaData
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 
 class SignupFragment: Fragment() {
 
