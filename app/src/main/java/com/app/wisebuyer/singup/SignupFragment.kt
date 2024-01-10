@@ -1,7 +1,6 @@
 package com.app.wisebuyer.singup
 
 import android.os.Bundle
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,8 @@ import androidx.navigation.fragment.findNavController
 import com.app.wisebuyer.R
 import com.app.wisebuyer.login.UserCredentials
 import com.app.wisebuyer.login.UserMetaData
+import com.app.wisebuyer.utils.checkCredentials
+import com.app.wisebuyer.utils.checkMetaData
 
 class SignupFragment: Fragment() {
 
@@ -59,17 +60,19 @@ class SignupFragment: Fragment() {
     private fun resetParameters(){
         emailInput.text.clear()
         passwordInput.text.clear()
+        firstNameInput.text.clear()
+        lastNameInput.text.clear()
         messageBox.text = ""
     }
 
     private fun observeSignUpResult() {
-        signUpViewModel.signUpResult.observe(viewLifecycleOwner) { result: Boolean ->
-            if (result) {
+        signUpViewModel.signUpResult.observe(viewLifecycleOwner) { result: String ->
+            if (result == "Success") {
                 findNavController().navigate(R.id.action_signupFragment_to_loginFragment)
             }
             else {
                 messageBox.visibility = View.VISIBLE
-                messageBox.text = getString(R.string.EmailInUseString)
+                messageBox.text = result
             }
         }
     }
@@ -78,42 +81,12 @@ class SignupFragment: Fragment() {
             messageBox.visibility = View.INVISIBLE
             val credentials = UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
             val userMetaData = UserMetaData(firstNameInput.text.toString(), lastNameInput.text.toString())
-            if (checkCredentials(credentials) && checkMetaData(userMetaData) ) {
+            if (checkCredentials(credentials, emailInput, passwordInput) &&
+                checkMetaData(userMetaData, firstNameInput, lastNameInput))
+            {
                 signUpViewModel.signUpUser(credentials, userMetaData)
             }
         }
     }
 
-    private fun checkMetaData(userMetaData: UserMetaData): Boolean {
-        if (userMetaData.firstName.isEmpty() || !isString(userMetaData.firstName)){
-            firstNameInput.error = "Enter valid first name"
-        }
-        else if (userMetaData.lastName.isEmpty() || !isString(userMetaData.lastName)){
-            lastNameInput.error = "Enter valid last name"
-        }
-        else{ return true }
-        return false
-
-    }
-
-    private fun checkCredentials(credentials: UserCredentials) : Boolean{
-        if (credentials.email.isEmpty()){
-            emailInput.error = "Enter a email"
-        }
-        else if (credentials.password.isEmpty()){
-            passwordInput.error = "Enter a password"
-        }
-        else if (credentials.password.length <=6) {
-            passwordInput.error = "Password need to more than 6 characters long"
-        }
-        else if (!Patterns.EMAIL_ADDRESS.matcher(credentials.email).matches()){
-            emailInput.error = "Enter valid email format"
-        }
-        else{ return true }
-        return false
-    }
-
-    private fun isString(value: String): Boolean {
-        return value.all { it.isLetter() }
-    }
 }

@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.app.wisebuyer.utils.checkCredentials
 import com.google.firebase.ktx.Firebase
 
 class LoginFragment : Fragment() {
@@ -68,7 +69,7 @@ class LoginFragment : Fragment() {
         loginButton.setOnClickListener {
             messageBox.visibility = View.INVISIBLE
             val credentials = UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
-            if (checkAllFields(credentials)) {
+            if (checkCredentials(credentials, emailInput, passwordInput)) {
                 loginViewModel.loginUser(credentials)
             }
         }
@@ -79,26 +80,11 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun checkAllFields(credentials: UserCredentials): Boolean{
-        if (credentials.email.isEmpty()){
-            emailInput.error = "Enter a email"
-        }
-        else if (credentials.password.isEmpty()){
-            passwordInput.error = "Enter a password"
-        }
-        else if (credentials.password.length <=6) {
-            passwordInput.error = "Password need to more than 6 characters long"
-        }
-        else if (!Patterns.EMAIL_ADDRESS.matcher(credentials.email).matches()){
-            emailInput.error = "Enter valid email format"
-        }
-        else{ return true }
-        return false
-    }
 
     private fun resetParameters(){
         emailInput.text.clear()
         passwordInput.text.clear()
         messageBox.text = ""
+
     }
 }
