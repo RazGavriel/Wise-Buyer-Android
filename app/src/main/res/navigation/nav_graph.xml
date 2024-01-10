@@ -13,7 +13,30 @@
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.app.wisebuyer.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+
+        <argument
+            android:name="firstName"
+            app:argType="string" />
+        <argument
+            android:name="profilePicture"
+            app:argType="string" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="LastName"
+            app:argType="string" />
+    </fragment>
+
     <fragment
         android:id="@+id/postsFragment"
         android:name="com.app.wisebuyer.posts.PostsFragment"

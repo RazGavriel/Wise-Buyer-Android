@@ -38,18 +38,20 @@ class SignUpViewModel : ViewModel() {
                 }
                 val uploadTask = imageRef.putBytes(avatarBytes)
 
-                uploadTask.addOnSuccessListener{
+                uploadTask.addOnSuccessListener {
                     db.collection("Users").document(credentials.email)
                         .set(user)
                         .addOnSuccessListener {
                             _signUpResult.value = "Success"
-                    }
-                }
-                .addOnFailureListener{
-                    _signUpResult.value = "Cannot upload first profile image"
-                    Log.v("APP", "Cannot upload first profile image")
+                            Log.w("APP", "created user")
+                        }
+                        .addOnFailureListener {
+                            _signUpResult.value = "Cannot upload first profile image"
+                            Log.v("APP", "Cannot upload first profile image")
+                        }
                 }
             }
+
             .addOnFailureListener {
                 _signUpResult.value = "The email is already in use"
                 Log.v("APP", "The email is already in use")
