@@ -33,7 +33,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="30dp"
                 android:gravity="center"
-                android:text="Raz's Profile"
+                android:text="User's Profile"
                 android:textSize="18sp"
                 android:textColor="@color/black"
                 android:textStyle="bold" />

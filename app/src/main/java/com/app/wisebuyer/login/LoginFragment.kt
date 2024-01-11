@@ -54,17 +54,6 @@ class LoginFragment : Fragment() {
         handleSignUpClick(signupButton)
         observeLoginResult()
 
-        db.collection("Users").document("a@a.com")
-            .get()
-            .addOnSuccessListener { result ->
-                Log.d("APP", "${result.id} => ${result.data}")
-            }
-            .addOnFailureListener { exception ->
-                Log.w("APP", "Error getting documents.", exception)
-            }
-
-
-
         return view
     }
     override fun onResume() {
@@ -114,6 +103,5 @@ class LoginFragment : Fragment() {
         emailInput.text.clear()
         passwordInput.text.clear()
         messageBox.text = ""
-
     }
 }
