@@ -16,7 +16,6 @@ import com.google.firebase.storage.storage
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
-
 class SignUpViewModel : ViewModel() {
     private val _signUpResult = MutableLiveData<String>()
     val signUpResult: LiveData<String> get() = _signUpResult

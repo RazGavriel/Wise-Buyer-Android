@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.auth.auth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 import android.util.Patterns
@@ -19,7 +20,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.app.wisebuyer.utils.checkCredentials
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.runBlocking
+import java.io.FileInputStream
+import java.util.Properties
 
 class LoginFragment : Fragment() {
 
@@ -29,7 +33,6 @@ class LoginFragment : Fragment() {
     private lateinit var loginButton: Button
     private lateinit var signupButton: Button
     private lateinit var messageBox : TextView
-
 
     val db = com.google.firebase.Firebase.firestore
 
@@ -76,14 +79,14 @@ class LoginFragment : Fragment() {
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Pair<HashMap<String,Any>, String> ->
             if (result.first.isNotEmpty()) {
-                val firstName = result.first["firstName"]
-                val lastName = result.first["lastName"]
-                val profilePhoto = result.first["profilePhoto"]
+                val firstName = result.first["firstName"].toString()
+                val lastName = result.first["lastName"].toString()
+                val profilePhoto = result.first["profilePhoto"].toString()
                 val email = result.second
 
-//                var metaDataUser = runBlocking {  loginViewModel.getMetaDataUser(result.second) }
-                // var direction = LoginFragmentDirections.actionLoginFragmentToProfileFragment()
-                findNavController().navigate(R.id.action_loginFragment_to_profileFragment)
+                val direction = LoginFragmentDirections.actionLoginFragmentToProfileFragment(
+                    firstName,lastName,email,profilePhoto)
+                findNavController().navigate(direction)
             }
             else {
                 messageBox.visibility = View.VISIBLE

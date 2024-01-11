@@ -14,9 +14,9 @@ suspend fun generateAvatar(firstName: String, lastName: String): ByteArray {
         val apiUrl = "https://ui-avatars.com/api/"
         val randomBackgroundColor = generateRandomColor()
 
-        val url2 = "$apiUrl?background=$randomBackgroundColor&color=fff&name=${firstName}+${lastName}"
+        val urlParams = "$apiUrl?background=$randomBackgroundColor&rounded=true&color=fff&name=${firstName}+${lastName}"
 
-        val url: URL = URI.create(url2).toURL()
+        val url: URL = URI.create(urlParams).toURL()
 
         val responseCode: Int = withContext(Dispatchers.IO) {
             (url.openConnection() as HttpURLConnection).apply {
