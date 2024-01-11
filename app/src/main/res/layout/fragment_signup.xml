@@ -129,7 +129,16 @@
             android:layout_marginRight="50dp"
             android:layout_below="@id/passwordInputLayout"
             android:text="@string/signUpString"
-            app:backgroundTint="@color/green"
-            />
+            android:visibility="visible"
+            app:backgroundTint="@color/green" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/lastNameInputLayout"
+            android:visibility="gone" />
+
     </RelativeLayout>
+
 </ScrollView>

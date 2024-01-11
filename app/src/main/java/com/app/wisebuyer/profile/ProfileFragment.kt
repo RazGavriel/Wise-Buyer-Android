@@ -28,6 +28,7 @@ import android.app.Activity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import android.content.pm.PackageManager
+import android.widget.ProgressBar
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -35,6 +36,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var UserProfileString: TextView
     private lateinit var changeProfilePictureButton: Button
+    private lateinit var progressBarProfilePhoto: ProgressBar
 
     private lateinit var profileImage: ImageView
 
@@ -56,15 +58,13 @@ class ProfileFragment : Fragment() {
 
         UserProfileString = view.findViewById<TextView>(R.id.user_profile_string)
         changeProfilePictureButton = view.findViewById<Button>(R.id.change_profile_picture_button)
+        progressBarProfilePhoto = view.findViewById<ProgressBar>(R.id.progress_bar_profile_photo)
+
         profileImage = view.findViewById<ImageView>(R.id.profile_image)
         firstName = args.firstName
         lastName = args.lastName
         email = args.email
         profilePicture = args.profilePicture
-
-        var progressDialog = ProgressDialog(requireContext())
-        progressDialog.setMessage("Uploading...")
-        progressDialog.setCancelable(false)
 
         InitializeFirstName()
         initializeProfileImage()
@@ -85,6 +85,8 @@ class ProfileFragment : Fragment() {
     private fun initializeProfileImage() {
         val storage = FirebaseStorage.getInstance()
         val gsReference = storage.reference.child(profilePicture)
+        profileImage.visibility = View.GONE
+        progressBarProfilePhoto.visibility = View.VISIBLE
 
         gsReference.downloadUrl
             .addOnSuccessListener { uri ->
@@ -95,6 +97,10 @@ class ProfileFragment : Fragment() {
             .addOnFailureListener { exception ->
                 Log.e("APP", "Error loading profile image: ${exception.message}")
             }
+            .addOnCompleteListener {
+                profileImage.visibility = View.VISIBLE
+                progressBarProfilePhoto.visibility = View.GONE
+            }
     }
 
     @SuppressLint("SetTextI18n")
@@ -104,25 +110,32 @@ class ProfileFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
+            && data != null && data.data != null) {
+
             val imageUri: Uri = data.data!!
             uploadImageToFirebaseStorage(imageUri)
         }
     }
 
     private fun uploadImageToFirebaseStorage(imageUri: Uri) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val imageRef: StorageReference = FirebaseStorage.getInstance().getReference(profilePicture)
-
         imageRef.putFile(imageUri)
             .addOnSuccessListener {
                 initializeProfileImage()
-                // Image uploaded successfully
-                // You can handle success here, for example, update the user's profile with the new image URL
-                // UpdateUserProfile(imageRef.downloadUrl.toString())
             }
             .addOnFailureListener { e ->
-                // Handle failures
+                Toast.makeText(requireContext(), "Upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+            .addOnProgressListener { taskSnapshot ->
+                profileImage.visibility = View.GONE
+                progressBarProfilePhoto.visibility = View.VISIBLE
+                val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toInt()
+                progressBarProfilePhoto.progress = progress
+            }
+            .addOnCompleteListener {
+                profileImage.visibility = View.VISIBLE
+                progressBarProfilePhoto.visibility = View.GONE
             }
     }
 }

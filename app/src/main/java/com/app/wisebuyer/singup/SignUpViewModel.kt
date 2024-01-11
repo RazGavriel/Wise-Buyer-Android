@@ -1,6 +1,8 @@
 package com.app.wisebuyer.singup
 
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,6 +37,7 @@ class SignUpViewModel : ViewModel() {
                 val avatarBytes = runBlocking {
                     generateAvatar(userMetaData.firstName, userMetaData.lastName)
                 }
+
                 val uploadTask = imageRef.putBytes(avatarBytes)
 
                 uploadTask.addOnSuccessListener {

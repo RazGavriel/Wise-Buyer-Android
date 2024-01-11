@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -27,6 +28,7 @@ class SignupFragment: Fragment() {
     private lateinit var lastNameInput : EditText
     private lateinit var signUpButton: Button
     private lateinit var messageBox : TextView
+    private lateinit var progressBarSignUp: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +44,7 @@ class SignupFragment: Fragment() {
         lastNameInput = view.findViewById<EditText>(R.id.last_name_input)
         signUpButton = view.findViewById<Button>(R.id.sign_up_button)
         messageBox = view.findViewById<TextView>(R.id.message_box)
-
+        progressBarSignUp = view.findViewById<ProgressBar>(R.id.progress_bar_sign_up)
 
         handleSignUpClick(signUpButton)
         observeSignUpResult()
@@ -76,6 +78,7 @@ class SignupFragment: Fragment() {
                 messageBox.visibility = View.VISIBLE
                 messageBox.text = result
             }
+            progressBarSignUp.visibility = View.GONE
         }
     }
     private fun handleSignUpClick(signUpButton:Button) {
@@ -86,6 +89,7 @@ class SignupFragment: Fragment() {
             if (checkCredentials(credentials, emailInput, passwordInput) &&
                 checkMetaData(userMetaData, firstNameInput, lastNameInput))
             {
+                progressBarSignUp.visibility = View.VISIBLE
                 signUpViewModel.signUpUser(credentials, userMetaData)
             }
         }

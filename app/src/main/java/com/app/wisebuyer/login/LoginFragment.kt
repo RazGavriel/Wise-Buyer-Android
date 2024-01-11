@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -72,6 +73,8 @@ class LoginFragment : Fragment() {
                 val lastName = result.first["lastName"].toString()
                 val profilePhoto = result.first["profilePhoto"].toString()
                 val email = result.second
+
+                Toast.makeText(requireContext(), "hello $firstName", Toast.LENGTH_SHORT).show()
 
                 val direction = LoginFragmentDirections.actionLoginFragmentToProfileFragment(
                     firstName,lastName,email,profilePhoto)
