@@ -1,14 +1,9 @@
 package com.app.wisebuyer.profile
 
-import android.annotation.SuppressLint
-import android.app.ProgressDialog
-import android.content.Intent
-import android.graphics.Bitmap
+import ProfileViewModel
 import android.net.Uri
 import com.app.wisebuyer.R
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,125 +12,97 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.navArgs
-import com.app.wisebuyer.MainActivity
 import com.bumptech.glide.Glide
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import android.Manifest
-import android.app.Activity
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import android.content.pm.PackageManager
 import android.widget.ProgressBar
-import com.google.firebase.auth.FirebaseAuth
-
+import androidx.fragment.app.activityViewModels
 
 class ProfileFragment : Fragment() {
+    private val profileViewModel: ProfileViewModel by activityViewModels()
+    private val args: ProfileFragmentArgs by navArgs()
 
-    private lateinit var UserProfileString: TextView
+    private lateinit var userProfileString: TextView
     private lateinit var changeProfilePictureButton: Button
     private lateinit var progressBarProfilePhoto: ProgressBar
-
     private lateinit var profileImage: ImageView
-
-    private val args: ProfileFragmentArgs by navArgs()
-    private lateinit var firstName: String
-    private lateinit var lastName: String
-    private lateinit var email: String
-    private lateinit var profilePicture: String
-    private val PICK_IMAGE_REQUEST = 1
+    private lateinit var userMetaData : UserMetaData
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val view: View = inflater.inflate(
             R.layout.fragment_profile, container, false
         )
 
-        UserProfileString = view.findViewById<TextView>(R.id.user_profile_string)
+        userProfileString = view.findViewById<TextView>(R.id.user_profile_string)
         changeProfilePictureButton = view.findViewById<Button>(R.id.change_profile_picture_button)
         progressBarProfilePhoto = view.findViewById<ProgressBar>(R.id.progress_bar_profile_photo)
-
         profileImage = view.findViewById<ImageView>(R.id.profile_image)
-        firstName = args.firstName
-        lastName = args.lastName
-        email = args.email
-        profilePicture = args.profilePicture
 
-        InitializeFirstName()
-        initializeProfileImage()
+        userMetaData = UserMetaData(args.firstName, args.lastName, args.email, args.profilePicture)
+
+        initializeFirstName()
+        observeShowProfilePhoto()
+        observeUploadProfileImage()
         handleChangeProfilePicture()
+
+        profileViewModel.getProfileImage(userMetaData)
+
         return view
 
     }
 
+    private fun observeShowProfilePhoto() {
+        profileViewModel.showProfilePhoto.observe(viewLifecycleOwner) { result: Uri? ->
+            if (result is Uri)
+            {
+                Glide.with(this)
+                .load(result)
+                .into(profileImage)
+            }
+            else
+            {
+                profileImage.visibility = View.VISIBLE
+                progressBarProfilePhoto.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun initializeFirstName() {
+        "${userMetaData.firstName}'s Profile".also { userProfileString.text = it }
+    }
+
+    private val pickImageContract = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let { profileViewModel.uploadProfileImage(userMetaData, it) }
+    }
+
     private fun handleChangeProfilePicture() {
         changeProfilePictureButton.setOnClickListener {
-            val intent = Intent()
-            intent.type = "image/*"
-            intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(intent, PICK_IMAGE_REQUEST)
+            pickImageContract.launch("image/*")
         }
     }
 
-    private fun initializeProfileImage() {
-        val storage = FirebaseStorage.getInstance()
-        val gsReference = storage.reference.child(profilePicture)
-        profileImage.visibility = View.GONE
-        progressBarProfilePhoto.visibility = View.VISIBLE
-
-        gsReference.downloadUrl
-            .addOnSuccessListener { uri ->
-                Glide.with(this)
-                    .load(uri)
-                    .into(profileImage)
+    private fun observeUploadProfileImage() {
+        profileViewModel.uploadProfileImageResult.observe(viewLifecycleOwner) { result: Int ->
+            when (result) {
+                1 -> {
+                    profileImage.visibility = View.VISIBLE
+                    progressBarProfilePhoto.visibility = View.GONE
+                }
+                0 -> {
+                    profileImage.visibility = View.GONE
+                    progressBarProfilePhoto.visibility = View.VISIBLE
+                }
+                -1 -> {
+                    Toast.makeText(requireContext(), "Upload failed", Toast.LENGTH_SHORT).show()
+                }
             }
-            .addOnFailureListener { exception ->
-                Log.e("APP", "Error loading profile image: ${exception.message}")
-            }
-            .addOnCompleteListener {
-                profileImage.visibility = View.VISIBLE
-                progressBarProfilePhoto.visibility = View.GONE
-            }
-    }
 
-    @SuppressLint("SetTextI18n")
-    fun InitializeFirstName() {
-        UserProfileString.text = "$firstName's Profile"
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
-            && data != null && data.data != null) {
-
-            val imageUri: Uri = data.data!!
-            uploadImageToFirebaseStorage(imageUri)
         }
     }
 
-    private fun uploadImageToFirebaseStorage(imageUri: Uri) {
-        val imageRef: StorageReference = FirebaseStorage.getInstance().getReference(profilePicture)
-        imageRef.putFile(imageUri)
-            .addOnSuccessListener {
-                initializeProfileImage()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-            .addOnProgressListener { taskSnapshot ->
-                profileImage.visibility = View.GONE
-                progressBarProfilePhoto.visibility = View.VISIBLE
-                val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toInt()
-                progressBarProfilePhoto.progress = progress
-            }
-            .addOnCompleteListener {
-                profileImage.visibility = View.VISIBLE
-                progressBarProfilePhoto.visibility = View.GONE
-            }
-    }
+
 }

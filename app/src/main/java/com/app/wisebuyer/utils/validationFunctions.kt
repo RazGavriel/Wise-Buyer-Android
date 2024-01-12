@@ -3,10 +3,10 @@ package com.app.wisebuyer.utils
 import android.util.Patterns
 import android.widget.EditText
 import com.app.wisebuyer.login.UserCredentials
-import com.app.wisebuyer.login.UserMetaData
 
-fun checkCredentials(credentials: UserCredentials, emailInput: EditText,
-                     passwordInput:EditText): Boolean{
+fun checkCredentials(
+    credentials: UserCredentials, emailInput: EditText,
+    passwordInput:EditText): Boolean{
     if (credentials.email.isEmpty()){
         emailInput.error = "Enter a email"
     }
@@ -23,18 +23,6 @@ fun checkCredentials(credentials: UserCredentials, emailInput: EditText,
     return false
 }
 
-fun checkMetaData(userMetaData: UserMetaData, firstNameInput: EditText,
-                          lastNameInput: EditText): Boolean {
-    if (userMetaData.firstName.isEmpty() || !isString(userMetaData.firstName)){
-        firstNameInput.error = "Enter valid first name"
-    }
-    else if (userMetaData.lastName.isEmpty() || !isString(userMetaData.lastName)){
-        lastNameInput.error = "Enter valid last name"
-    }
-    else{ return true }
-    return false
-}
-
-private fun isString(value: String): Boolean {
+public fun isString(value: String): Boolean {
     return value.all { it.isLetter() }
 }

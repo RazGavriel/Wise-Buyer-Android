@@ -3,13 +3,6 @@ package com.app.wisebuyer.login
 import LoginViewModel
 import com.app.wisebuyer.R
 import android.os.Bundle
-import android.util.Log
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
-import com.google.firebase.auth.auth
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.storage
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,10 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.app.wisebuyer.utils.checkCredentials
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.runBlocking
-import java.io.FileInputStream
-import java.util.Properties
 
 class LoginFragment : Fragment() {
 
@@ -34,8 +23,6 @@ class LoginFragment : Fragment() {
     private lateinit var loginButton: Button
     private lateinit var signupButton: Button
     private lateinit var messageBox : TextView
-
-    val db = com.google.firebase.Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater,

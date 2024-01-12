@@ -1,11 +1,10 @@
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.app.wisebuyer.login.UserCredentials
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 
 
 class LoginViewModel : ViewModel() {
@@ -25,6 +24,7 @@ class LoginViewModel : ViewModel() {
                     .get()
                     .addOnSuccessListener { result ->
                         Log.w("APP", "${result.id} => ${result.data}")
+//                        var dd = FirebaseAuth.getInstance().currentUser?.pro
                         _loginResult.value = Pair(result.data as HashMap<String, Any>, result.id)
                     }
             }

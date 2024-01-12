@@ -8,18 +8,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.app.wisebuyer.MainActivity
 import com.app.wisebuyer.R
 import com.app.wisebuyer.login.UserCredentials
-import com.app.wisebuyer.login.UserMetaData
 import com.app.wisebuyer.utils.checkCredentials
-import com.app.wisebuyer.utils.checkMetaData
+import com.app.wisebuyer.utils.isString
 
-class SignupFragment: Fragment() {
+class SignUpFragment: Fragment() {
 
     private val signUpViewModel: SignUpViewModel by activityViewModels()
     private lateinit var emailInput : EditText
@@ -75,7 +72,9 @@ class SignupFragment: Fragment() {
                 findNavController().navigate(R.id.action_signupFragment_to_loginFragment)
             }
             else {
-                messageBox.visibility = View.VISIBLE
+                resetParameters()
+                manageViews(emailInput, passwordInput, firstNameInput,
+                            lastNameInput, signUpButton, messageBox, mode="VISIBLE")
                 messageBox.text = result
             }
             progressBarSignUp.visibility = View.GONE
@@ -85,14 +84,35 @@ class SignupFragment: Fragment() {
         signUpButton.setOnClickListener{
             messageBox.visibility = View.INVISIBLE
             val credentials = UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
-            val userMetaData = UserMetaData(firstNameInput.text.toString(), lastNameInput.text.toString())
+            val userProperties = UserProperties(firstNameInput.text.toString(), lastNameInput.text.toString())
             if (checkCredentials(credentials, emailInput, passwordInput) &&
-                checkMetaData(userMetaData, firstNameInput, lastNameInput))
+                checkUserProperties(userProperties, firstNameInput, lastNameInput))
             {
+                manageViews(emailInput, passwordInput, firstNameInput,
+                          lastNameInput, signUpButton, mode="GONE")
                 progressBarSignUp.visibility = View.VISIBLE
-                signUpViewModel.signUpUser(credentials, userMetaData)
+                signUpViewModel.signUpUser(credentials, userProperties)
             }
         }
     }
 
+    private fun checkUserProperties(userProperties: UserProperties, firstNameInput: EditText,
+                                    lastNameInput: EditText): Boolean
+    {
+        if (userProperties.firstName.isEmpty() || !isString(userProperties.firstName)){
+            firstNameInput.error = "Enter valid first name"
+        }
+        else if (userProperties.lastName.isEmpty() || !isString(userProperties.lastName)){
+            lastNameInput.error = "Enter valid last name"
+        }
+        else{ return true }
+        return false
+    }
+
+    private fun manageViews(vararg views: View, mode: String) {
+        for (view in views) {
+            if (mode == "GONE") { view.visibility = View.GONE }
+            else{ view.visibility = View.VISIBLE }
+        }
+    }
 }

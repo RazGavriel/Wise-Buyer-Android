@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.app.wisebuyer.singup.SignupFragment"
+        android:name="com.app.wisebuyer.singup.SignUpFragment"
         android:label="SignupFragment" >
         <action
             android:id="@+id/action_signupFragment_to_loginFragment"
