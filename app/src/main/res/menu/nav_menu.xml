@@ -7,4 +7,8 @@
         android:id="@+id/privacyPolicyFragment"
         android:title="PrivacyPolicy"/>
 
+    <item
+        android:id="@+id/contactUsFragment"
+        android:title="ContactUs"/>
+
 </menu>
