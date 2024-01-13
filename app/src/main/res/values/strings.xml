@@ -8,4 +8,6 @@
     <string name="loginString">Login</string>
     <string name="EmailInUseString">The email is already in use</string>
     <string name="invalidCreds">Invalid Credentials</string>
+    <string name="navigation_drawer_open">close\n</string>
+    <string name="navigation_drawer_close">open</string>
 </resources>
