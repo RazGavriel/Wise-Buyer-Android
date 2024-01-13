@@ -55,4 +55,12 @@
             android:id="@+id/action_signupFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/privacyPolicyFragment"
+        android:name="com.app.wisebuyer.privacyPolicy.PrivacyPolicyFragment"
+        android:label="PrivacyPolicyFragment" />
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.app.wisebuyer.contactUs.ContactUsFragment"
+        android:label="ContactUsFragment" />
 </navigation>

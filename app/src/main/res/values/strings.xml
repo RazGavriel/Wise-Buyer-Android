@@ -8,6 +8,48 @@
     <string name="loginString">Login</string>
     <string name="EmailInUseString">The email is already in use</string>
     <string name="invalidCreds">Invalid Credentials</string>
+    <string name="navigation_drawer_open">close\n</string>
+    <string name="navigation_drawer_close">open</string>
+    <string name="privacy_policy_content">
+        <![CDATA[
+            <h1>Privacy Policy</h1>
+            <h2>Data Collection</h2>
+            <p>Welcome to Wise Buyer! This application is designed to empower users to share information about various products. In order to provide a seamless experience, we collect the following types of data:</p>
+            <ul>
+                <li><strong>User-provided product information:</strong> This includes text, images, and any other content you choose to share when posting about products.</li>
+                <li><strong>Device information:</strong> We collect basic device information such as the device model and operating system version to ensure compatibility and optimize the performance.</li>
+            </ul>
+            <h2>Use of Information</h2>
+            <p>The information collected serves the following purposes:</p>
+            <ul>
+                <li><strong>Displaying user-generated product information:</strong> Your shared content is utilized to showcase products within the Wise Buyer application, facilitating a community-driven platform.</li>
+                <li><strong>Enhancing user experience:</strong> We analyze collected data to improve the overall quality of the application, ensuring a more intuitive and satisfying user experience.</li>
+            </ul>
+            <h2>Third-Party Sharing</h2>
+            <p>We do not share your personal information with third parties without your explicit consent. Wise Buyer is committed to safeguarding your data and maintaining your privacy.</p>
+            <h2>Security Measures</h2>
+            <p>We implement robust security measures to protect your data from unauthorized access, disclosure, alteration, and destruction. Your privacy and the security of your information are of utmost importance to us.</p>
+            <h2>User Controls</h2>
+            <p>Wise Buyer provides you with controls to manage your privacy settings. You can review, edit, or delete your posted product information at any time. Additionally, you can adjust your account settings to control the visibility of your data within the app.</p>
+            <h2>Cookies and Tracking Technologies</h2>
+            <p>Wise Buyer may use cookies and other tracking technologies to enhance user experience and collect information on how the application is used. These technologies help us improve our services and tailor content to your preferences. You can manage your cookie preferences in your device settings.</p>
+            <h2>Third-Party Services</h2>
+            <p>Our application may integrate with third-party services or platforms for certain functionalities. Please be aware that these third-party services have their own privacy policies, and we encourage you to review them. Wise Buyer is not responsible for the data practices of third-party services.</p>
+            <h2>Advertising</h2>
+            <p>Wise Buyer may display advertisements from third-party ad networks. These ads may be personalized based on the information collected through cookies and other tracking technologies. Please review our Cookie Policy for more information on how we use advertising cookies.</p>
+            <h2>Children\'s Privacy</h2>
+            <p>Wise Buyer is not intended for children under the age of 13. We do not knowingly collect personal information from children. If you believe that we have inadvertently collected information from a child, please contact us immediately, and we will take steps to delete the information.</p>
+            <h2>Changes to the Privacy Policy</h2>
+            <p>We may update our privacy policy to reflect changes in our data practices. Any modifications will be effective immediately upon posting the updated policy within the application. We recommend reviewing the privacy policy periodically to stay informed about how we collect, use, and protect your information.</p>
+            <h2>Consent</h2>
+            <p>By using Wise Buyer, you consent to the terms outlined in this privacy policy. If you do not agree with these terms, please refrain from using the application.</p>
+            <h2>Effective Date</h2>
+            <p>This privacy policy is effective as of [insert date]. Any updates or changes will be effective immediately upon posting.</p>
+        ]]>
+    </string>
+    <string name="contact_us">Contact Us</string>
+    <string name="header_title">Wise Buyer</string>
+    <string name="header_text">user name</string>
     <string name="firstName">First Name</string>
     <string name="lastName">Last Name</string>
     <string name="ChangeProfilePictureString">Change Profile Picture</string>

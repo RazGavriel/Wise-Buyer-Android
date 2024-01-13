@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
+    android:background="@android:color/background_light">
+
+    <TextView
+        android:id="@+id/textViewSupportInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Support Information"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:paddingBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/textViewSupportEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email: support@example.com"
+        android:textSize="18sp"
+        android:drawableStart="@drawable/email"
+        android:drawablePadding="8dp"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/textViewSupportPhone"
+        android:layout_width="273dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawableStart="@drawable/phone"
+        android:drawablePadding="8dp"
+        android:text="Phone: +1 (555) 123-4567"
+        android:textSize="18sp" />
+
+</LinearLayout>
