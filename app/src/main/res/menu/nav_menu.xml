@@ -4,6 +4,7 @@
         android:id="@+id/postsFragment"
         android:title="posts"/>
     <item
-        android:id="@+id/loginFragment"
-        android:title="Login"/>
+        android:id="@+id/privacyPolicyFragment"
+        android:title="PrivacyPolicy"/>
+
 </menu>
