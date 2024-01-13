@@ -3,14 +3,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.wisebuyer.profile.UserMetaData
+import com.app.wisebuyer.utils.RequestStatus
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
 class ProfileViewModel : ViewModel() {
     private val _showProfilePhoto = MutableLiveData<Uri?>()
-    private val _uploadProfileImageResult = MutableLiveData<Int>()
+    private val _uploadProfileImageResult = MutableLiveData<RequestStatus>()
     val showProfilePhoto: LiveData<Uri?> get() = _showProfilePhoto
-    val uploadProfileImageResult: LiveData<Int> get() = _uploadProfileImageResult
+    val uploadProfileImageResult: LiveData<RequestStatus> get() = _uploadProfileImageResult
 
     private val storage = FirebaseStorage.getInstance()
 
@@ -33,13 +34,13 @@ class ProfileViewModel : ViewModel() {
                 getProfileImage(userMetaData)
             }
             .addOnFailureListener {
-                _uploadProfileImageResult.value = -1
+                _uploadProfileImageResult.value = RequestStatus.FAILURE
             }
             .addOnProgressListener {
-                _uploadProfileImageResult.value = 0
+                _uploadProfileImageResult.value = RequestStatus.IN_PROGRESS
             }
             .addOnCompleteListener {
-                _uploadProfileImageResult.value = 1
+                _uploadProfileImageResult.value = RequestStatus.SUCCESS
             }
     }
 }

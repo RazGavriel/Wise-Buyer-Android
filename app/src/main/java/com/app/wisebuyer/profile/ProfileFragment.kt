@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.ProgressBar
 import androidx.fragment.app.activityViewModels
+import com.app.wisebuyer.utils.RequestStatus
 
 class ProfileFragment : Fragment() {
     private val profileViewModel: ProfileViewModel by activityViewModels()
@@ -86,23 +87,20 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeUploadProfileImage() {
-        profileViewModel.uploadProfileImageResult.observe(viewLifecycleOwner) { result: Int ->
+        profileViewModel.uploadProfileImageResult.observe(viewLifecycleOwner) { result: RequestStatus ->
             when (result) {
-                1 -> {
+                RequestStatus.SUCCESS -> {
                     profileImage.visibility = View.VISIBLE
                     progressBarProfilePhoto.visibility = View.GONE
                 }
-                0 -> {
+                RequestStatus.IN_PROGRESS -> {
                     profileImage.visibility = View.GONE
                     progressBarProfilePhoto.visibility = View.VISIBLE
                 }
-                -1 -> {
+                RequestStatus.FAILURE -> {
                     Toast.makeText(requireContext(), "Upload failed", Toast.LENGTH_SHORT).show()
                 }
             }
-
         }
     }
-
-
 }
