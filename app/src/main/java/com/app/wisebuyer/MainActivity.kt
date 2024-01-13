@@ -55,22 +55,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigationView() {
-        navigationView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.postsFragment -> {
-                    navController.navigate(R.id.postsFragment)
-                    true
-                }
-                else -> false
-            }
-        }
-
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.postsFragment, R.id.loginFragment
             ), drawerLayout
         )
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        findViewById<Toolbar>(R.id.toolbar)
+                .setupWithNavController(navController, appBarConfiguration)
+
         navigationView.setupWithNavController(navController)
     }
 
