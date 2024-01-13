@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigationView() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.postsFragment, R.id.loginFragment
+                R.id.postsFragment, R.id.privacyPolicyFragment
             ), drawerLayout
         )
         findViewById<Toolbar>(R.id.toolbar)
