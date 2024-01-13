@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/primary_group">
     <item
         android:id="@+id/postsFragment"
-        android:title="posts"/>
+        android:icon="@drawable/email"
+        android:title="Feed"
+        />
+    </group>
+    <group android:id="@+id/second_group">
     <item
         android:id="@+id/privacyPolicyFragment"
-        android:title="PrivacyPolicy"/>
+        android:icon="@drawable/email"
+        android:title="Privacy Policy"/>
 
     <item
         android:id="@+id/contactUsFragment"
-        android:title="ContactUs"/>
+        android:icon="@drawable/email"
+        android:title="Contact Us"/>
+    </group>
 
 </menu>
