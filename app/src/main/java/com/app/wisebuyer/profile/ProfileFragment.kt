@@ -21,7 +21,7 @@ import com.app.wisebuyer.utils.RequestStatus
 
 class ProfileFragment : Fragment() {
     private val profileViewModel: ProfileViewModel by activityViewModels()
-    private val args: ProfileFragmentArgs by navArgs()
+//    private val args: ProfileFragmentArgs by navArgs()
 
     private lateinit var userProfileString: TextView
     private lateinit var changeProfilePictureButton: Button
@@ -43,7 +43,12 @@ class ProfileFragment : Fragment() {
         progressBarProfilePhoto = view.findViewById<ProgressBar>(R.id.progress_bar_profile_photo)
         profileImage = view.findViewById<ImageView>(R.id.profile_image)
 
-        userMetaData = UserMetaData(args.firstName, args.lastName, args.email, args.profilePicture)
+        // fix to change to pull from uuid of user
+        //userMetaData = UserMetaData(args.firstName, args.lastName, args.email, args.profilePicture)
+
+        userMetaData = UserMetaData("Matan","Gavriel", "a@a.com",
+            "profilePictures/0dd084d5-b192-42e9-a72c-466aaa447f75.jpg")
+
 
         initializeFirstName()
         observeShowProfilePhoto()
