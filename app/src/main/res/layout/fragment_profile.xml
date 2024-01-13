@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:background="@color/green">
+
+        <!-- Absolute ProgressBar -->
+        <ProgressBar
+            android:id="@+id/progress_bar_profile_photo"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="20dp">
+
+            <TextView
+                android:id="@+id/user_profile_string"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="30dp"
+                android:gravity="center"
+                android:text="User's Profile"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/change_profile_picture_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ChangeProfilePictureString"
+                android:textSize="11sp"
+                app:backgroundTint="@color/black"/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

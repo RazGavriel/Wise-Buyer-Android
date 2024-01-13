@@ -1,27 +1,73 @@
 package com.app.wisebuyer.singup
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.app.wisebuyer.login.UserCredentials
+import com.app.wisebuyer.utils.generateAvatar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.storage
+import com.app.wisebuyer.login.UserCredentials
+import kotlinx.coroutines.runBlocking
+import java.util.UUID
 
 class SignUpViewModel : ViewModel() {
-    private val _signUpResult = MutableLiveData<Boolean>()
-    val signUpResult: LiveData<Boolean> get() = _signUpResult
+    private val _signUpResult = MutableLiveData<String>()
+    val signUpResult: LiveData<String> get() = _signUpResult
+    private lateinit var auth: FirebaseAuth
+    private val db = FirebaseFirestore.getInstance()
+    private val storage: FirebaseStorage = Firebase.storage
 
-    private lateinit var auth : FirebaseAuth
-    fun signUpUser(credentials: UserCredentials) {
+    fun signUpUser(credentials: UserCredentials, userProperties: UserProperties) {
         auth = Firebase.auth
+        val storageReference = storage.reference
+
         auth.createUserWithEmailAndPassword(credentials.email, credentials.password)
-            .addOnCompleteListener {task ->
-                _signUpResult.value = task.isSuccessful
-        }
+            .addOnSuccessListener {
+                val user = returnUserAsJson(userProperties)
+                val imageRef = storageReference.child(user["profilePhoto"] as String)
+
+                val avatarBytes = runBlocking {
+                    generateAvatar(userProperties.firstName, userProperties.lastName)
+                }
+
+                val uploadTask = imageRef.putBytes(avatarBytes)
+
+                uploadTask.addOnSuccessListener {
+                    db.collection("Users").document(credentials.email)
+                        .set(user)
+                        .addOnSuccessListener {
+                            _signUpResult.value = "Success"
+                            Log.w("APP", "created user")
+                        }
+                        .addOnFailureListener {
+                            _signUpResult.value = "Cannot upload first profile image"
+                            Log.v("APP", "Cannot upload first profile image")
+                        }
+                }
+            }
+
+            .addOnFailureListener {
+                _signUpResult.value = "The email is already in use"
+                Log.v("APP", "The email is already in use")
+            }
+    }
+    fun clearSignUpResult() {
+        _signUpResult.value = ""
     }
 
-    fun clearSignUpResult() {
-        _signUpResult.value = false
+
+    private fun returnUserAsJson(userProperties: UserProperties)
+    : MutableMap<String, Any> {
+        val user: MutableMap<String, Any> = HashMap()
+        user["firstName"] = userProperties.firstName
+        user["lastName"] = userProperties.lastName
+        val randomUuid = UUID.randomUUID().toString()
+        user["profilePhoto"] = "profilePictures/$randomUuid.jpg"
+        return user
     }
 }

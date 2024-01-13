@@ -1,17 +1,19 @@
 package com.app.wisebuyer.login
 
+import LoginViewModel
 import com.app.wisebuyer.R
 import android.os.Bundle
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.app.wisebuyer.utils.checkCredentials
 
 class LoginFragment : Fragment() {
 
@@ -52,9 +54,17 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeLoginResult() {
-        loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Boolean ->
-            if (result) {
+        loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Pair<HashMap<String,Any>, String> ->
+            if (result.first.isNotEmpty()) {
                 findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
+//                val firstName = result.first["firstName"].toString()
+//                val lastName = result.first["lastName"].toString()
+//                val profilePhoto = result.first["profilePhoto"].toString()
+//                val email = result.second
+//                Toast.makeText(requireContext(), "hello $firstName", Toast.LENGTH_SHORT).show()
+//                val direction = LoginFragmentDirections.actionLoginFragmentToProfileFragment(
+//                    firstName,lastName,email,profilePhoto)
+//                findNavController().navigate(direction)
             }
             else {
                 messageBox.visibility = View.VISIBLE
@@ -67,7 +77,7 @@ class LoginFragment : Fragment() {
         loginButton.setOnClickListener {
             messageBox.visibility = View.INVISIBLE
             val credentials = UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
-            if (checkAllFields(credentials)) {
+            if (checkCredentials(credentials, emailInput, passwordInput)) {
                 loginViewModel.loginUser(credentials)
             }
         }
@@ -76,23 +86,6 @@ class LoginFragment : Fragment() {
         signupButton.setOnClickListener{
             findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
         }
-    }
-
-    private fun checkAllFields(credentials: UserCredentials): Boolean{
-        if (credentials.email.isEmpty()){
-            emailInput.error = "Enter a email"
-        }
-        else if (credentials.password.isEmpty()){
-            passwordInput.error = "Enter a password"
-        }
-        else if (credentials.password.length <=6) {
-            passwordInput.error = "Password need to more than 6 characters long"
-        }
-        else if (!Patterns.EMAIL_ADDRESS.matcher(credentials.email).matches()){
-            emailInput.error = "Enter valid email format"
-        }
-        else{ return true }
-        return false
     }
 
     private fun resetParameters(){

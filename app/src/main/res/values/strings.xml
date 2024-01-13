@@ -50,4 +50,11 @@
     <string name="contact_us">Contact Us</string>
     <string name="header_title">Wise Buyer</string>
     <string name="header_text">user name</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="ChangeProfilePictureString">Change Profile Picture</string>
+    <string name="profileString">Profile</string>
+    <string name="feedString">Feed</string>
+    <string name="privacyPolicyString">Privacy Policy</string>
+    <string name="contactUsString">Contact Us</string>
 </resources>
