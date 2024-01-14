@@ -2,9 +2,13 @@ package com.app.wisebuyer.profile
 
 import ProfileViewModel
 import android.app.AlertDialog
+import android.graphics.Typeface
 import android.net.Uri
 import com.app.wisebuyer.R
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,22 +87,25 @@ class ProfileFragment : Fragment() {
 
     private fun handleChangeName() {
         threeDotsMenu.setOnClickListener {
-            val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_change_name, null)
+            val dialogView = LayoutInflater.from(requireContext())
+                                           .inflate(R.layout.dialog_change_name, null)
             val etFirstName = dialogView.findViewById<EditText>(R.id.editTextFirstName)
             val etLastName = dialogView.findViewById<EditText>(R.id.editTextLastName)
 
+            val title = "Full Name - ${sharedViewModel.userMetaData.firstName} " +
+                        "${sharedViewModel.userMetaData.lastName}\nChange to :"
+            val spannableTitle = SpannableString(title)
+            spannableTitle.setSpan(StyleSpan(Typeface.BOLD), 0,
+                                   title.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Change Name")
+                .setTitle(spannableTitle)
                 .setView(dialogView)
                 .setPositiveButton("Save") { _, _ ->
                     val newFirstName = etFirstName.text.toString()
                     val newLastName = etLastName.text.toString()
 
-                    // Perform actions with the new first and last names
-                    // For example, update the UI or make a network request
 
-                    // Update the UI with the new name
-                    "${newFirstName}'s Profile".also { userProfileString.text = it }
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
