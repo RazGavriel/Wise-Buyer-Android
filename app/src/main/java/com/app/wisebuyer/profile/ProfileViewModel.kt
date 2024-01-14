@@ -16,7 +16,7 @@ class ProfileViewModel : ViewModel() {
     private val storage = FirebaseStorage.getInstance()
 
     fun getProfileImage(userMetaData: UserMetaData) {
-        val gsReference = storage.reference.child(userMetaData.profilePicture)
+        val gsReference = storage.reference.child(userMetaData.profilePhoto)
         gsReference.downloadUrl
             .addOnSuccessListener { uri ->
                 _showProfilePhoto.value = uri
@@ -27,7 +27,7 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun uploadProfileImage(userMetaData: UserMetaData, imageUri: Uri) {
-        val imageRef: StorageReference = storage.getReference(userMetaData.profilePicture)
+        val imageRef: StorageReference = storage.getReference(userMetaData.profilePhoto)
 
         imageRef.putFile(imageUri)
             .addOnSuccessListener {

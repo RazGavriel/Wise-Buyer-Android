@@ -7,9 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.app.wisebuyer.profile.UserMetaData
+import com.app.wisebuyer.shared.SharedViewModel
 
 class PostsFragment : Fragment() {
     private lateinit var searchInput: EditText
+    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -19,6 +23,12 @@ class PostsFragment : Fragment() {
             R.layout.fragment_posts, container, false
         )
         searchInput = view.findViewById<EditText>(R.id.search_input)
+
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+        val userMetaData = sharedViewModel.userMetaData
+
+
+
         return view
     }
 }

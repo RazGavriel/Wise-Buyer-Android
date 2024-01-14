@@ -39,12 +39,18 @@
                 android:id="@+id/user_profile_string"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="30dp"
                 android:gravity="center"
                 android:text="User's Profile"
                 android:textSize="18sp"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/three_dots_menu"
+                android:layout_width="20dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="20dp"
+                tools:srcCompat="@drawable/three_dots_menu" />
 
             <Button
                 android:id="@+id/change_profile_picture_button"
@@ -54,13 +60,12 @@
                 android:text="@string/ChangeProfilePictureString"
                 android:textSize="11sp"
                 app:backgroundTint="@color/black"/>
+
         </LinearLayout>
 
 
 
     </LinearLayout>
-
-
 
 
 </RelativeLayout>
