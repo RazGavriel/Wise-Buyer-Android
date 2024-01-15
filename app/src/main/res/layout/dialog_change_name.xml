@@ -7,14 +7,14 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/editTextFirstName"
+        android:id="@+id/firstNameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/newFirstNameHint"
         android:inputType="text"/>
 
     <EditText
-        android:id="@+id/editTextLastName"
+        android:id="@+id/lastNameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/newLastNameHint"

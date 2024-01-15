@@ -1,7 +1,7 @@
 package com.app.wisebuyer.profile
 
 import ProfileViewModel
-import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Typeface
 import android.net.Uri
 import com.app.wisebuyer.R
@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,19 +17,20 @@ import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.ProgressBar
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.app.wisebuyer.MainActivity
 import com.app.wisebuyer.shared.SharedViewModel
+import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.RequestStatus
+import com.app.wisebuyer.utils.isString
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 
 class ProfileFragment : Fragment() {
     private val profileViewModel: ProfileViewModel by activityViewModels()
@@ -60,6 +62,7 @@ class ProfileFragment : Fragment() {
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         initializeFirstName()
         observeShowProfilePhoto()
+        observeChangeName()
         observeUploadProfileImage()
         handleChangeProfilePicture()
         handleChangeName()
@@ -83,14 +86,13 @@ class ProfileFragment : Fragment() {
             pickImageContract.launch("image/*")
         }
     }
-
-
+    
     private fun handleChangeName() {
         threeDotsMenu.setOnClickListener {
             val dialogView = LayoutInflater.from(requireContext())
                                            .inflate(R.layout.dialog_change_name, null)
-            val etFirstName = dialogView.findViewById<EditText>(R.id.editTextFirstName)
-            val etLastName = dialogView.findViewById<EditText>(R.id.editTextLastName)
+            val firstNameInput = dialogView.findViewById<EditText>(R.id.firstNameInput)
+            val lastNameInput = dialogView.findViewById<EditText>(R.id.lastNameInput)
 
             val title = "Full Name - ${sharedViewModel.userMetaData.firstName} " +
                         "${sharedViewModel.userMetaData.lastName}\nChange to :"
@@ -102,13 +104,59 @@ class ProfileFragment : Fragment() {
                 .setTitle(spannableTitle)
                 .setView(dialogView)
                 .setPositiveButton("Save") { _, _ ->
-                    val newFirstName = etFirstName.text.toString()
-                    val newLastName = etLastName.text.toString()
 
-
+                    val newFirstName = firstNameInput.text.toString()
+                    val newLastName = lastNameInput.text.toString()
+                    handleDialogNameValidation(UserProperties(newFirstName,newLastName))
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
+        }
+    }
+
+
+    private fun handleDialogNameValidation(userProperties: UserProperties) {
+        if (checkUserProperties(userProperties)) {
+            val newUser = sharedViewModel.userMetaData
+            newUser.firstName = userProperties.firstName
+            newUser.lastName = userProperties.lastName
+            profileViewModel.changeUserName(newUser)
+        }
+    }
+
+    private fun showDialogResponse(message: String) {
+        val rootView: View = requireView()
+        val snackBar = Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
+        val snackBarView: View = snackBar.view
+        snackBarView.setBackgroundColor(resources.getColor(R.color.black))
+        val textView: TextView = snackBarView.findViewById(com.google.android.material.R.id.snackbar_text)
+        textView.setTextColor(resources.getColor(R.color.white)) // Set your desired text color
+        snackBar.show()
+    }
+    
+    private fun checkUserProperties(userProperties: UserProperties): Boolean
+    {
+        if (userProperties.firstName.isEmpty() || !isString(userProperties.firstName)){
+            showDialogResponse("ERROR - Enter valid first name")
+        }
+        else if (userProperties.lastName.isEmpty() || !isString(userProperties.lastName)){
+            showDialogResponse("ERROR - Enter valid last name")
+        }
+        else{ return true }
+        return false
+    }
+
+    private fun observeChangeName() {
+        profileViewModel.changeNameResult.observe(viewLifecycleOwner) { result: UserProperties? ->
+            if (result != null) {
+                sharedViewModel.userMetaData.firstName = result.firstName
+                sharedViewModel.userMetaData.lastName = result.lastName
+                showDialogResponse("Name changed successfully :)")
+                initializeFirstName()
+            }
+            else{
+                showDialogResponse("Error while changing your name")
+            }
         }
     }
 
