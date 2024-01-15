@@ -1,5 +1,4 @@
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +8,6 @@ import com.app.wisebuyer.utils.RequestStatus
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import java.security.KeyStore.TrustedCertificateEntry
 
 class ProfileViewModel : ViewModel() {
     private val _showProfilePhoto = MutableLiveData<Uri?>()

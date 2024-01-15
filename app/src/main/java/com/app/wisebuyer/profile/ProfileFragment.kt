@@ -1,7 +1,6 @@
 package com.app.wisebuyer.profile
 
 import ProfileViewModel
-import android.content.Context
 import android.graphics.Typeface
 import android.net.Uri
 import com.app.wisebuyer.R
@@ -9,7 +8,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +20,6 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.ProgressBar
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.app.wisebuyer.shared.SharedViewModel
