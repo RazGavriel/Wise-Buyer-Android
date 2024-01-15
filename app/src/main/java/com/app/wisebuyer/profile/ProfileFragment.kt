@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.ProgressBar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.app.wisebuyer.MainActivity
 import com.app.wisebuyer.shared.SharedViewModel
 import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.RequestStatus
@@ -55,9 +56,8 @@ class ProfileFragment : Fragment() {
         profileImage = view.findViewById<ImageView>(R.id.profile_image)
         threeDotsMenu = view.findViewById<ImageView>(R.id.three_dots_menu)
 
-
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-        initializeFirstName()
+        initializeUserName()
         observeShowProfilePhoto()
         observeChangeName()
         observeUploadProfileImage()
@@ -70,8 +70,11 @@ class ProfileFragment : Fragment() {
 
     }
 
-    private fun initializeFirstName() {
+    private fun initializeUserName() {
         "${sharedViewModel.userMetaData.firstName}'s Profile".also { userProfileString.text = it }
+        (activity as MainActivity).updateHeaderUserName(
+            UserProperties(sharedViewModel.userMetaData.firstName,
+                           sharedViewModel.userMetaData.lastName))
     }
 
     private val pickImageContract = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -101,7 +104,6 @@ class ProfileFragment : Fragment() {
                 .setTitle(spannableTitle)
                 .setView(dialogView)
                 .setPositiveButton("Save") { _, _ ->
-
                     val newFirstName = firstNameInput.text.toString()
                     val newLastName = lastNameInput.text.toString()
                     handleDialogNameValidation(UserProperties(newFirstName,newLastName))
@@ -110,7 +112,6 @@ class ProfileFragment : Fragment() {
                 .show()
         }
     }
-
 
     private fun handleDialogNameValidation(userProperties: UserProperties) {
         if (checkUserProperties(userProperties)) {
@@ -149,7 +150,7 @@ class ProfileFragment : Fragment() {
                 sharedViewModel.userMetaData.firstName = result.firstName
                 sharedViewModel.userMetaData.lastName = result.lastName
                 showDialogResponse("Name changed successfully :)")
-                initializeFirstName()
+                initializeUserName()
             }
             else{
                 showDialogResponse("Error while changing your name")

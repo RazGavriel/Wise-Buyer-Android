@@ -2,6 +2,7 @@ package com.app.wisebuyer
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.app.wisebuyer.singup.UserProperties
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
+    private lateinit var headerView: View
+    private lateinit var headerUsernameTextView: TextView
     private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +32,9 @@ class MainActivity : AppCompatActivity() {
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.navigation_view)
+        headerView = navigationView.getHeaderView(0)
+        headerUsernameTextView = headerView.findViewById(R.id.username_header_drawer)
+
         toolbar = findViewById(R.id.toolbar)
 
         setSupportActionBar(toolbar)
@@ -75,6 +82,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         navigationView.setupWithNavController(navController)
+    }
+
+    fun updateHeaderUserName(userProperties: UserProperties) {
+        "${userProperties.firstName} ${userProperties.lastName}".also { headerUsernameTextView.text = it }
     }
 
     override fun onSupportNavigateUp(): Boolean {
