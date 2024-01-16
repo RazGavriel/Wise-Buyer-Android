@@ -75,6 +75,7 @@ class LoginFragment : Fragment() {
 
     private fun handleLoginClick(loginButton:Button) {
         loginButton.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
             messageBox.visibility = View.INVISIBLE
             val credentials = UserCredentials(emailInput.text.toString(), passwordInput.text.toString())
             if (checkCredentials(credentials, emailInput, passwordInput)) {

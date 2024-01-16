@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PostsFragment : Fragment() {
-//    private lateinit var searchInput: EditText
+    private lateinit var addNewPostButton: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -18,7 +19,10 @@ class PostsFragment : Fragment() {
         val view: View = inflater.inflate(
             R.layout.fragment_posts, container, false
         )
-//        searchInput = view.findViewById<EditText>(R.id.search_input)
+        addNewPostButton = view.findViewById<FloatingActionButton>(R.id.add_new_post_button)
+        addNewPostButton.setOnClickListener {
+            findNavController().navigate(R.id.action_postsFragment_to_newPostFragment)
+        }
         return view
     }
 }

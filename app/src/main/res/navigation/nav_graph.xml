@@ -39,7 +39,11 @@
     <fragment
         android:id="@+id/postsFragment"
         android:name="com.app.wisebuyer.posts.PostsFragment"
-        android:label="PostsFragment" />
+        android:label="PostsFragment" >
+        <action
+            android:id="@+id/action_postsFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+    </fragment>
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.app.wisebuyer.singup.SignUpFragment"
@@ -56,4 +60,8 @@
         android:id="@+id/contactUsFragment"
         android:name="com.app.wisebuyer.contactUs.ContactUsFragment"
         android:label="ContactUsFragment" />
+    <fragment
+        android:id="@+id/newPostFragment"
+        android:name="com.app.wisebuyer.posts.new.NewPostFragment"
+        android:label="NewPostFragment" />
 </navigation>
