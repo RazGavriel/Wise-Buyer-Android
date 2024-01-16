@@ -1,4 +1,7 @@
 package com.app.wisebuyer.posts.new
+
+import android.text.Editable
+
 enum class ProductType(val type: String) {
     HOME("home"),
     ELECTRONICS("electronics"),
