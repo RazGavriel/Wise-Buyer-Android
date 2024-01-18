@@ -147,10 +147,14 @@ class ProfileFragment : Fragment() {
     private fun observeChangeName() {
         profileViewModel.changeNameResult.observe(viewLifecycleOwner) { result: UserProperties? ->
             if (result != null) {
-                sharedViewModel.userMetaData.firstName = result.firstName
-                sharedViewModel.userMetaData.lastName = result.lastName
-                showDialogResponse("Name changed successfully :)")
-                initializeUserName()
+                if (sharedViewModel.userMetaData.firstName != result.firstName ||
+                    sharedViewModel.userMetaData.lastName != result.lastName)
+                {
+                    sharedViewModel.userMetaData.firstName = result.firstName
+                    sharedViewModel.userMetaData.lastName = result.lastName
+                    showDialogResponse("Name changed successfully :)")
+                    initializeUserName()
+                }
             }
             else{
                 showDialogResponse("Error while changing your name")
