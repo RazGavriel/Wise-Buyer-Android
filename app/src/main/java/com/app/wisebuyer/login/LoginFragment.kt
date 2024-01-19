@@ -57,14 +57,6 @@ class LoginFragment : Fragment() {
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Pair<HashMap<String,Any>, String> ->
             if (result.first.isNotEmpty()) {
                 findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
-//                val firstName = result.first["firstName"].toString()
-//                val lastName = result.first["lastName"].toString()
-//                val profilePhoto = result.first["profilePhoto"].toString()
-//                val email = result.second
-//                Toast.makeText(requireContext(), "hello $firstName", Toast.LENGTH_SHORT).show()
-//                val direction = LoginFragmentDirections.actionLoginFragmentToProfileFragment(
-//                    firstName,lastName,email,profilePhoto)
-//                findNavController().navigate(direction)
             }
             else {
                 messageBox.visibility = View.VISIBLE
