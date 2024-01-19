@@ -1,5 +1,6 @@
 package com.app.wisebuyer.posts.new
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
 import android.widget.Spinner
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -26,8 +28,9 @@ class NewPostFragment : Fragment() {
     private lateinit var description: TextInputEditText
     private lateinit var link: TextInputEditText
     private lateinit var price: TextInputEditText
-    private lateinit var attachPicture: ImageButton
-    private lateinit var submit: MaterialButton
+    private lateinit var attachPictureButton: ImageButton
+    private lateinit var submitButton: MaterialButton
+    private lateinit var attachedPicture: Uri
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +43,7 @@ class NewPostFragment : Fragment() {
         initViews(view)
         handleSubmitButton()
         observeCreatePostStatus()
+        handleAttachProductPicture()
 
         return view
     }
@@ -50,20 +54,20 @@ class NewPostFragment : Fragment() {
         description = view.findViewById(R.id.post_description)
         link = view.findViewById(R.id.post_link)
         price = view.findViewById(R.id.post_price)
-        attachPicture = view.findViewById(R.id.post_attach_picture_button)
-        submit = view.findViewById(R.id.post_submit)
+        attachPictureButton = view.findViewById(R.id.post_attach_picture_button)
+        submitButton = view.findViewById(R.id.post_submit)
 
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
-            ProductType.values().map { it.type }
+            ProductType.entries.map { it.type }
         )
 
         type.adapter = adapter
     }
 
     private fun handleSubmitButton() {
-        submit.setOnClickListener {
+        submitButton.setOnClickListener {
             // TODO: add validations
             createNewPost()
         }
@@ -77,7 +81,18 @@ class NewPostFragment : Fragment() {
             link.text.toString(),
             price.text.toString(),
         )
-        newPostViewModel.createNewPost(newPost)
+        newPostViewModel.createNewPost(newPost, attachedPicture)
+    }
+
+    private val pickImageContract = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            attachedPicture = it
+        }
+    }
+    private fun handleAttachProductPicture() {
+        attachPictureButton.setOnClickListener {
+            pickImageContract.launch("image/*")
+        }
     }
 
     private fun observeCreatePostStatus() {
