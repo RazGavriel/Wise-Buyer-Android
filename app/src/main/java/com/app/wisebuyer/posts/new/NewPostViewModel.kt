@@ -38,4 +38,8 @@ class NewPostViewModel : ViewModel() {
                 _requestStatus.value = RequestStatus.FAILURE
             }
     }
+
+     fun clear() {
+        _requestStatus.value = RequestStatus.IDLE
+    }
 }

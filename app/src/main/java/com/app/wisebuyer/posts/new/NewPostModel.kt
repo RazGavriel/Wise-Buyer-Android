@@ -1,7 +1,5 @@
 package com.app.wisebuyer.posts.new
 
-import android.text.Editable
-
 enum class ProductType(val type: String) {
     HOME("home"),
     ELECTRONICS("electronics"),
@@ -25,7 +23,7 @@ enum class ProductType(val type: String) {
     OTHER("other");
     companion object {
         fun fromString(type: String): ProductType {
-            return values().find { it.type.equals(type, ignoreCase = true) }
+            return entries.find { it.type.equals(type, ignoreCase = true) }
                 ?: OTHER
         }
     }

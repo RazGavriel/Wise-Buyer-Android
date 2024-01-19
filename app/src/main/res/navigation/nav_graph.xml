@@ -19,21 +19,6 @@
         android:id="@+id/profileFragment"
         android:name="com.app.wisebuyer.profile.ProfileFragment"
         android:label="ProfileFragment" >
-
-<!--        <argument-->
-<!--            android:name="firstName"-->
-<!--            app:argType="string" />-->
-<!--        <argument-->
-<!--            android:name="LastName"-->
-<!--            app:argType="string" />-->
-<!--        <argument-->
-<!--            android:name="email"-->
-<!--            app:argType="string" />-->
-<!--        <argument-->
-<!--            android:name="profilePicture"-->
-<!--            app:argType="string" />-->
-
-
     </fragment>
 
     <fragment
