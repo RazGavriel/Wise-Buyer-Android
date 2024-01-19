@@ -22,7 +22,15 @@ enum class ProductType(val type: String) {
     OUTDOORS("outdoors"),
     VIDEO_GAMES("video games"),
     SOFTWARE("software"),
+    OTHER("other");
+    companion object {
+        fun fromString(type: String): ProductType {
+            return values().find { it.type.equals(type, ignoreCase = true) }
+                ?: OTHER
+        }
+    }
 }
+
 
 data class Post(
     val title: String,
