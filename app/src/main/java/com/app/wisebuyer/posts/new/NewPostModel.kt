@@ -27,5 +27,5 @@ enum class ProductType(val type: String) {
 data class Post(
     val title: String,
     val productType: ProductType,
-    val description: String, val link: String, val price: Number, val productPicture: String
+    val description: String, val link: String, val price: String, val productPicture: String
 )

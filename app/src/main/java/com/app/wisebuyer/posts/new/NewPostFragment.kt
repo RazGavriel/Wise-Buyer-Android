@@ -12,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import com.app.wisebuyer.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.app.wisebuyer.posts.new.ProductType
 import com.app.wisebuyer.utils.RequestStatus
 
 class NewPostFragment : Fragment() {
@@ -35,6 +34,17 @@ class NewPostFragment : Fragment() {
             R.layout.fragment_new_post, container, false
         )
 
+        initializeViews(view)
+        setupSubmitButton()
+
+        newPostViewModel.requestStatus.observe(viewLifecycleOwner) { status: RequestStatus ->
+            handleRequestStatus(status)
+        }
+
+        return view
+    }
+
+    private fun initializeViews(view: View) {
         title = view.findViewById(R.id.post_title)
         type = view.findViewById(R.id.post_type)
         description = view.findViewById(R.id.post_description)
@@ -42,23 +52,27 @@ class NewPostFragment : Fragment() {
         price = view.findViewById(R.id.post_price)
         attachPicture = view.findViewById(R.id.post_attach_picture_button)
         submit = view.findViewById(R.id.post_submit)
+    }
 
-
+    private fun setupSubmitButton() {
         submit.setOnClickListener {
-            val newPost = Post(
-                title.text.toString(),
-                ProductType.valueOf(type.text.toString()),
-                description.text.toString(),
-                link.text.toString(),
-                price.text.toString().toInt(),
-                ""
-            )
-            newPostViewModel.createNewPost(newPost)
+            createNewPost()
         }
+    }
 
-        newPostViewModel.requestStatus.observe(viewLifecycleOwner) { status: RequestStatus ->
-            Log.v("APP", status.toString())
-        }
-        return view
+    private fun createNewPost() {
+        val newPost = Post(
+            title.text.toString(),
+            ProductType.valueOf(type.text.toString().uppercase()),
+            description.text.toString(),
+            link.text.toString(),
+            price.text.toString(),
+            ""
+        )
+        newPostViewModel.createNewPost(newPost)
+    }
+
+    private fun handleRequestStatus(status: RequestStatus) {
+        Log.v("APP", status.toString())
     }
 }
