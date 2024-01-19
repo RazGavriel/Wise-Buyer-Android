@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
+import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -21,7 +22,7 @@ class NewPostFragment : Fragment() {
 
     private lateinit var view: View
     private lateinit var title: TextInputEditText
-    private lateinit var type: AutoCompleteTextView
+    private lateinit var type: Spinner
     private lateinit var description: TextInputEditText
     private lateinit var link: TextInputEditText
     private lateinit var price: TextInputEditText
@@ -58,7 +59,7 @@ class NewPostFragment : Fragment() {
             ProductType.values().map { it.type }
         )
 
-        type.setAdapter(adapter)
+        type.adapter = adapter
     }
 
     private fun handleSubmitButton() {
@@ -71,11 +72,10 @@ class NewPostFragment : Fragment() {
     private fun createNewPost() {
         val newPost = Post(
             title.text.toString(),
-            ProductType.fromString(type.text.toString()),
+            ProductType.fromString(type.autofillValue.toString()),
             description.text.toString(),
             link.text.toString(),
             price.text.toString(),
-            ""
         )
         newPostViewModel.createNewPost(newPost)
     }

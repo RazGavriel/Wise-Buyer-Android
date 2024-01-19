@@ -19,18 +19,20 @@ class NewPostViewModel : ViewModel() {
 
         if (currentUser != null) {
             currentUser.email?.let {
-                _requestStatus.value = RequestStatus.IN_PROGRESS
-                savePost(it, post)
+                post.userEmail = it
+                savePost(post)
             }
         }
     }
 
-    private fun savePost(userEmail: String, post: Post) {
+    private fun savePost(post: Post) {
         val gson = Gson()
         val postJson = gson.toJson(post)
 
-        db.collection("Posts").document(userEmail)
-            .set(gson.fromJson(postJson, Map::class.java))
+        _requestStatus.value = RequestStatus.IN_PROGRESS
+
+        db.collection("Posts")
+            .add(gson.fromJson(postJson, Map::class.java))
             .addOnSuccessListener {
                 _requestStatus.value = RequestStatus.SUCCESS
             }
