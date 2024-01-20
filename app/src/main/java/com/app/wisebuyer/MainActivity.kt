@@ -46,10 +46,11 @@ class MainActivity : AppCompatActivity() {
         setupDrawer()
         setupNavigationView()
 
-        // if user is logged in go to main page
+//      if user is logged in go to main page
         val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             navController.navigate(R.id.action_loginFragment_to_postsFragment)
+            // TOOD: update shared view model
         }
     }
 
@@ -80,11 +81,11 @@ class MainActivity : AppCompatActivity() {
             ), drawerLayout
         )
         findViewById<Toolbar>(R.id.toolbar)
-                .setupWithNavController(navController, appBarConfiguration)
+            .setupWithNavController(navController, appBarConfiguration)
 
         // hide toolbar in login page
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if(destination.id == R.id.loginFragment) {
+            if (destination.id == R.id.loginFragment) {
                 toolbar.visibility = View.GONE
             } else {
                 toolbar.visibility = View.VISIBLE
@@ -95,7 +96,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateHeaderUserName(userProperties: UserProperties) {
-        "${userProperties.firstName} ${userProperties.lastName}".also { headerUsernameTextView.text = it }
+        "${userProperties.firstName} ${userProperties.lastName}".also {
+            headerUsernameTextView.text = it
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
