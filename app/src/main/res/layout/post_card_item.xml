@@ -12,10 +12,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Media -->
         <ImageView
             android:id="@+id/card_image"
-            app:srcCompat="@drawable/logo"
             android:layout_width="match_parent"
             android:layout_height="194dp"
             android:scaleType="centerCrop"
