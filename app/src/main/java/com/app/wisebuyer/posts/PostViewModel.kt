@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.app.wisebuyer.utils.RequestStatus
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.storage.FirebaseStorage
 
 class PostViewModel : ViewModel() {
     private val _requestStatus = MutableLiveData<RequestStatus>()
