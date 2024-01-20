@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -27,7 +28,7 @@ class PostsFragment : Fragment() {
         )
         addNewPostButton = view.findViewById<FloatingActionButton>(R.id.add_new_post_button)
         recyclerView = view.findViewById<RecyclerView>(R.id.posts_recycler_view)
-
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         addNewPostButton.setOnClickListener {
             findNavController().navigate(R.id.action_postsFragment_to_newPostFragment)
         }
@@ -37,6 +38,7 @@ class PostsFragment : Fragment() {
 
         postViewModel.posts.observe(viewLifecycleOwner) { posts: List<Post> ->
             Log.v("APP", posts.toString())
+            recyclerView.adapter = PostCardsAdapter(posts)
         }
 
         return view
