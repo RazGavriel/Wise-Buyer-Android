@@ -9,16 +9,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.app.wisebuyer.MainActivity
 import com.app.wisebuyer.shared.SharedViewModel
+import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.checkCredentials
 
 class LoginFragment : Fragment() {
-
     private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var emailInput : EditText
     private lateinit var passwordInput : EditText
@@ -26,8 +26,6 @@ class LoginFragment : Fragment() {
     private lateinit var signupButton: Button
     private lateinit var messageBox : TextView
     private lateinit var sharedViewModel: SharedViewModel
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +41,6 @@ class LoginFragment : Fragment() {
         signupButton = view.findViewById<Button>(R.id.sign_up_button)
         messageBox = view.findViewById<TextView>(R.id.message_box)
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-
 
         handleLoginClick(loginButton)
         handleSignUpClick(signupButton)
@@ -63,26 +60,27 @@ class LoginFragment : Fragment() {
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Pair<HashMap<String,Any>, String> ->
             if (result.first.isNotEmpty()) {
-                sharedViewModel.userMetaData.email = result.second
-                sharedViewModel.userMetaData.firstName = result.first["firstName"].toString()
-                sharedViewModel.userMetaData.lastName = result.first["lastName"].toString()
-                sharedViewModel.userMetaData.profilePhoto = result.first["profilePhoto"].toString()
+                updateSharedViewModel(result)
+
+                // change user name in header navigation drawer
+                (activity as MainActivity).updateHeaderUserName(
+                    UserProperties(sharedViewModel.userMetaData.firstName,
+                                   sharedViewModel.userMetaData.lastName))
 
                 findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
-//                val firstName = result.first["firstName"].toString()
-//                val lastName = result.first["lastName"].toString()
-//                val profilePhoto = result.first["profilePhoto"].toString()
-//                val email = result.second
-//                Toast.makeText(requireContext(), "hello $firstName", Toast.LENGTH_SHORT).show()
-//                val direction = LoginFragmentDirections.actionLoginFragmentToProfileFragment(
-//                    firstName,lastName,email,profilePhoto)
-//                findNavController().navigate(direction)
             }
             else {
                 messageBox.visibility = View.VISIBLE
                 messageBox.text = getString(R.string.invalidCreds)
             }
         }
+    }
+
+    private fun updateSharedViewModel(result: Pair<HashMap<String,Any>, String>){
+        sharedViewModel.userMetaData.email = result.second
+        sharedViewModel.userMetaData.firstName = result.first["firstName"].toString()
+        sharedViewModel.userMetaData.lastName = result.first["lastName"].toString()
+        sharedViewModel.userMetaData.profilePhoto = result.first["profilePhoto"].toString()
     }
 
     private fun handleLoginClick(loginButton:Button) {
@@ -106,3 +104,13 @@ class LoginFragment : Fragment() {
         messageBox.text = ""
     }
 }
+
+
+//                val firstName = result.first["firstName"].toString()
+//                val lastName = result.first["lastName"].toString()
+//                val profilePhoto = result.first["profilePhoto"].toString()
+//                val email = result.second
+//                Toast.makeText(requireContext(), "hello $firstName", Toast.LENGTH_SHORT).show()
+//                val direction = LoginFragmentDirections.actionLoginFragmentToProfileFragment(
+//                    firstName,lastName,email,profilePhoto)
+//                findNavController().navigate(direction)
