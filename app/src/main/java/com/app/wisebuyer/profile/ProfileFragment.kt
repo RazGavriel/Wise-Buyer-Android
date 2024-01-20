@@ -189,6 +189,7 @@ class ProfileFragment : Fragment() {
                 RequestStatus.FAILURE -> {
                     Toast.makeText(requireContext(), "Upload failed", Toast.LENGTH_SHORT).show()
                 }
+                else -> {}
             }
         }
     }

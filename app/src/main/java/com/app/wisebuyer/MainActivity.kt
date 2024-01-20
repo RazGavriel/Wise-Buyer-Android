@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -16,6 +16,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.app.wisebuyer.singup.UserProperties
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var headerView: View
     private lateinit var headerUsernameTextView: TextView
     private lateinit var toolbar: Toolbar
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,13 @@ class MainActivity : AppCompatActivity() {
         setupNavController()
         setupDrawer()
         setupNavigationView()
+
+//      if user is logged in go to main page
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            navController.navigate(R.id.action_loginFragment_to_postsFragment)
+            // TOOD: update shared view model
+        }
     }
 
     private fun setupNavController() {
@@ -70,11 +81,11 @@ class MainActivity : AppCompatActivity() {
             ), drawerLayout
         )
         findViewById<Toolbar>(R.id.toolbar)
-                .setupWithNavController(navController, appBarConfiguration)
+            .setupWithNavController(navController, appBarConfiguration)
 
         // hide toolbar in login page
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if(destination.id == R.id.loginFragment) {
+            if (destination.id == R.id.loginFragment) {
                 toolbar.visibility = View.GONE
             } else {
                 toolbar.visibility = View.VISIBLE
@@ -85,7 +96,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateHeaderUserName(userProperties: UserProperties) {
-        "${userProperties.firstName} ${userProperties.lastName}".also { headerUsernameTextView.text = it }
+        "${userProperties.firstName} ${userProperties.lastName}".also {
+            headerUsernameTextView.text = it
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

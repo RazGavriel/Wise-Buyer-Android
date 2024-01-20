@@ -10,7 +10,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/icon"/>
+        android:src="@drawable/logo"/>
 
     <TextView
         android:id="@+id/titleAppName"
@@ -106,7 +106,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/signUpString"
-            app:backgroundTint="@color/red"/>
+            android:textColor="@color/white"
+            app:backgroundTint="@color/black"/>
 
         <ProgressBar
             android:id="@+id/progress_bar_login"

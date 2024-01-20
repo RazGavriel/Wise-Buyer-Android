@@ -59,6 +59,7 @@
                 android:layout_weight="1"
                 android:text="@string/ChangeProfilePictureString"
                 android:textSize="11sp"
+                android:textColor="@color/white"
                 app:backgroundTint="@color/black"/>
 
         </LinearLayout>
