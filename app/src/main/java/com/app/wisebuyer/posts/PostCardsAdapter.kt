@@ -1,15 +1,17 @@
 package com.app.wisebuyer.posts
 
-import android.util.Log
-import com.app.wisebuyer.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.app.wisebuyer.R
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
+import java.text.NumberFormat
+import java.util.Locale
+
 
 class PostCardsAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostCardsAdapter.PostViewHolder>() {
 
@@ -19,6 +21,7 @@ class PostCardsAdapter(private val posts: List<Post>) : RecyclerView.Adapter<Pos
         val title: TextView = itemView.findViewById(R.id.card_title)
         val description: TextView = itemView.findViewById(R.id.card_description)
         val link: TextView = itemView.findViewById(R.id.card_link)
+        val price: TextView = itemView.findViewById(R.id.card_price)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -34,7 +37,8 @@ class PostCardsAdapter(private val posts: List<Post>) : RecyclerView.Adapter<Pos
                 .load(it)
                 .into(holder.image);
         }
-        holder.title.text = post.title
+        holder.price.text = NumberFormat.getCurrencyInstance(Locale.US).format(post.price.toInt())
+        "${post.title} | ${post.productType}".also { holder.title.text = it }
         holder.description.text = post.description
         holder.link.text = post.link
     }
