@@ -114,12 +114,3 @@ class LoginFragment : Fragment() {
         messageBox.text = ""
     }
 }
-
-//    val firstName = result.first["firstName"].toString()
-//    val lastName = result.first["lastName"].toString()
-//    val profilePhoto = result.first["profilePhoto"].toString()
-//    val email = result.second
-//    Toast.makeText(requireContext(), "hello $firstName", Toast.LENGTH_SHORT).show()
-//    val direction = LoginFragmentDirections.actionLoginFragmentToProfileFragment(
-//        firstName,lastName,email,profilePhoto)
-//    findNavController().navigate(direction)

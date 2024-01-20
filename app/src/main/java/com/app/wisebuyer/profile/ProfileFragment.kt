@@ -32,7 +32,6 @@ import com.google.android.material.snackbar.Snackbar
 
 class ProfileFragment : Fragment() {
     private val profileViewModel: ProfileViewModel by activityViewModels()
-//    private val args: ProfileFragmentArgs by navArgs()
 
     private lateinit var userProfileString: TextView
     private lateinit var changeProfilePictureButton: Button
@@ -147,14 +146,10 @@ class ProfileFragment : Fragment() {
     private fun observeChangeName() {
         profileViewModel.changeNameResult.observe(viewLifecycleOwner) { result: UserProperties? ->
             if (result != null) {
-                if (sharedViewModel.userMetaData.firstName != result.firstName ||
-                    sharedViewModel.userMetaData.lastName != result.lastName)
-                {
-                    sharedViewModel.userMetaData.firstName = result.firstName
-                    sharedViewModel.userMetaData.lastName = result.lastName
-                    showDialogResponse("Name changed successfully :)")
-                    initializeUserName()
-                }
+                sharedViewModel.userMetaData.firstName = result.firstName
+                sharedViewModel.userMetaData.lastName = result.lastName
+                showDialogResponse("Name changed successfully :)")
+                initializeUserName()
             }
             else{
                 showDialogResponse("Error while changing your name")
