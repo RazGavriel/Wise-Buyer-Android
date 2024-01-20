@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.ProgressBar
@@ -34,6 +35,7 @@ class NewPostFragment : Fragment() {
     private lateinit var submitButton: MaterialButton
     private lateinit var progressBar: ProgressBar
     private lateinit var attachedPicture: Uri
+    private var selectedProductType : String = ProductType.OTHER.type
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +63,7 @@ class NewPostFragment : Fragment() {
         submitButton = view.findViewById(R.id.post_submit)
         progressBar = view.findViewById(R.id.progress_bar_create_new_post)
 
+
         // initialize spinner options
         val adapter = ArrayAdapter(
             requireContext(),
@@ -68,6 +71,19 @@ class NewPostFragment : Fragment() {
             ProductType.entries.map { it.type }
         )
 
+        type.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                selectedProductType = parentView.getItemAtPosition(position).toString()
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                selectedProductType = ProductType.OTHER.type
+            }
+        }
         type.adapter = adapter
     }
 
@@ -81,7 +97,7 @@ class NewPostFragment : Fragment() {
     private fun createNewPost() {
         val newPost = Post(
             title.text.toString(),
-            ProductType.fromString(type.autofillValue.toString()),
+            ProductType.fromString(selectedProductType),
             description.text.toString(),
             link.text.toString(),
             price.text.toString(),
