@@ -2,14 +2,19 @@ package com.app.wisebuyer.posts
 
 import com.app.wisebuyer.R
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.app.wisebuyer.utils.RequestStatus
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PostsFragment : Fragment() {
+
+    private val postViewModel: PostViewModel by activityViewModels()
     private lateinit var addNewPostButton: FloatingActionButton
 
     override fun onCreateView(
@@ -23,6 +28,14 @@ class PostsFragment : Fragment() {
         addNewPostButton.setOnClickListener {
             findNavController().navigate(R.id.action_postsFragment_to_newPostFragment)
         }
+
+        // fetch all posts
+        postViewModel.getAllPosts()
+
+        postViewModel.posts.observe(viewLifecycleOwner) { posts: List<Post> ->
+            Log.v("APP", posts.toString())
+        }
+
         return view
     }
 }

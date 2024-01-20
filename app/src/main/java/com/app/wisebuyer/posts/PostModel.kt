@@ -1,5 +1,7 @@
 package com.app.wisebuyer.posts
 
+import java.util.Date
+
 enum class ProductType(val type: String) {
     HOME("home"),
     ELECTRONICS("electronics"),
@@ -21,6 +23,7 @@ enum class ProductType(val type: String) {
     VIDEO_GAMES("video games"),
     SOFTWARE("software"),
     OTHER("other");
+
     companion object {
         fun fromString(type: String): ProductType {
             return entries.find { it.type.equals(type, ignoreCase = true) }
@@ -29,9 +32,13 @@ enum class ProductType(val type: String) {
     }
 }
 
-
 data class Post(
-    val title: String,
-    val productType: ProductType,
-    val description: String, val link: String, val price: String, var productPicture: String = "", var userEmail: String = "",
+    val title: String = "",
+    val productType: ProductType = ProductType.OTHER,
+    val description: String = "",
+    val link: String = "",
+    val price: String = "",
+    var productPicture: String = "",
+    var userEmail: String = "",
+    var createdAt: String = Date().time.toString()
 )

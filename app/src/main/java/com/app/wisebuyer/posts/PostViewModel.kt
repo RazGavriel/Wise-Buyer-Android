@@ -1,6 +1,6 @@
 package com.app.wisebuyer.posts
 
-import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,23 +14,25 @@ import com.google.gson.Gson
 
 class PostViewModel : ViewModel() {
     private val _requestStatus = MutableLiveData<RequestStatus>()
+    private val _posts = MutableLiveData<List<Post>>()
 
-    private val _posts = MutableLiveData<Post>()
-
-    val posts: LiveData<Post> get() = _posts
+    val posts: LiveData<List<Post>> get() = _posts
     val requestStatus: LiveData<RequestStatus> get() = _requestStatus
 
     private val db = FirebaseFirestore.getInstance()
-
     private val storage = FirebaseStorage.getInstance()
 
     fun getAllPosts() {
-        val posts = db.collection("Posts").get()
-
-    }
-
-    private fun savePost(post: Post) {
-
+        db.collection("Posts").orderBy("createdAt").get()
+            .addOnSuccessListener { documents ->
+                Log.v("APP", documents.toString())
+                val postList = documents.toObjects(Post::class.java)
+                _posts.value = postList
+                _requestStatus.value = RequestStatus.SUCCESS
+            }
+            .addOnFailureListener { exception ->
+                _requestStatus.value = RequestStatus.FAILURE
+            }
     }
 
     fun clear() {
