@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.Spinner
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -30,6 +31,7 @@ class NewPostFragment : Fragment() {
     private lateinit var price: TextInputEditText
     private lateinit var attachPictureButton: ImageButton
     private lateinit var submitButton: MaterialButton
+    private lateinit var progressBar: ProgressBar
     private lateinit var attachedPicture: Uri
 
     override fun onCreateView(
@@ -56,7 +58,9 @@ class NewPostFragment : Fragment() {
         price = view.findViewById(R.id.post_price)
         attachPictureButton = view.findViewById(R.id.post_attach_picture_button)
         submitButton = view.findViewById(R.id.post_submit)
+        progressBar = view.findViewById(R.id.progress_bar_create_new_post)
 
+        // initialize spinner options
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
@@ -98,8 +102,16 @@ class NewPostFragment : Fragment() {
     private fun observeCreatePostStatus() {
         newPostViewModel.requestStatus.observe(viewLifecycleOwner) { status: RequestStatus ->
             when(status) {
-                RequestStatus.IN_PROGRESS ->
-                    view.visibility = View.GONE
+                RequestStatus.IN_PROGRESS ->{
+                    title.visibility = View.GONE
+                    type.visibility = View.GONE
+                    description.visibility = View.GONE
+                    link.visibility = View.GONE
+                    price.visibility = View.GONE
+                    attachPictureButton.visibility = View.GONE
+                    submitButton.visibility = View.GONE
+                    progressBar.visibility = View.VISIBLE
+                }
                 RequestStatus.SUCCESS ->
                     findNavController().popBackStack()
 
