@@ -23,6 +23,6 @@ fun checkCredentials(
     return false
 }
 
-public fun isString(value: String): Boolean {
+fun isString(value: String): Boolean {
     return value.all { it.isLetter() }
 }

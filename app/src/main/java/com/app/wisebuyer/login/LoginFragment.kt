@@ -12,7 +12,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.app.wisebuyer.shared.SharedViewModel
 import com.app.wisebuyer.utils.checkCredentials
 
 class LoginFragment : Fragment() {
@@ -23,6 +25,9 @@ class LoginFragment : Fragment() {
     private lateinit var loginButton: Button
     private lateinit var signupButton: Button
     private lateinit var messageBox : TextView
+    private lateinit var sharedViewModel: SharedViewModel
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +42,8 @@ class LoginFragment : Fragment() {
         loginButton = view.findViewById<Button>(R.id.login_button)
         signupButton = view.findViewById<Button>(R.id.sign_up_button)
         messageBox = view.findViewById<TextView>(R.id.message_box)
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+
 
         handleLoginClick(loginButton)
         handleSignUpClick(signupButton)
@@ -56,6 +63,11 @@ class LoginFragment : Fragment() {
     private fun observeLoginResult() {
         loginViewModel.loginResult.observe(viewLifecycleOwner) { result: Pair<HashMap<String,Any>, String> ->
             if (result.first.isNotEmpty()) {
+                sharedViewModel.userMetaData.email = result.second
+                sharedViewModel.userMetaData.firstName = result.first["firstName"].toString()
+                sharedViewModel.userMetaData.lastName = result.first["lastName"].toString()
+                sharedViewModel.userMetaData.profilePhoto = result.first["profilePhoto"].toString()
+
                 findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
 //                val firstName = result.first["firstName"].toString()
 //                val lastName = result.first["lastName"].toString()
