@@ -24,7 +24,6 @@ class LoginViewModel : ViewModel() {
                     .get()
                     .addOnSuccessListener { result ->
                         Log.w("APP", "${result.id} => ${result.data}")
-//                        var dd = FirebaseAuth.getInstance().currentUser?.pro
                         _loginResult.value = Pair(result.data as HashMap<String, Any>, result.id)
                     }
             }

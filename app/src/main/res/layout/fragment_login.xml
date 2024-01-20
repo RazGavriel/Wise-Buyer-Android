@@ -108,5 +108,12 @@
             android:text="@string/signUpString"
             app:backgroundTint="@color/red"/>
 
+        <ProgressBar
+            android:id="@+id/progress_bar_login"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/emailInputLayout"
+            android:visibility="gone" />
+
     </LinearLayout>
 </RelativeLayout>

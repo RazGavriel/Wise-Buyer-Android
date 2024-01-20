@@ -32,7 +32,6 @@ import com.google.android.material.snackbar.Snackbar
 
 class ProfileFragment : Fragment() {
     private val profileViewModel: ProfileViewModel by activityViewModels()
-//    private val args: ProfileFragmentArgs by navArgs()
 
     private lateinit var userProfileString: TextView
     private lateinit var changeProfilePictureButton: Button
