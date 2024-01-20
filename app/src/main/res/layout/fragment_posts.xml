@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="search"
+            android:hint="@string/search_string"
             android:imeOptions="actionNext"
             android:inputType="text" />
 
@@ -31,23 +29,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_new_post_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="16dp"
-            android:contentDescription="test"
-            app:srcCompat="@drawable/add_icon" />
-
         <ProgressBar
             android:id="@+id/progress_bar_posts"
             android:layout_width="match_parent"
             android:layout_height="91dp"
             android:layout_below="@id/lastNameInputLayout"
-            android:layout_marginTop="250dp"
-            />
+            android:layout_marginTop="250dp" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
 </RelativeLayout>
