@@ -4,13 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.app.wisebuyer.posts.Post
 import com.app.wisebuyer.utils.RequestStatus
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.gson.Gson
 
 class PostViewModel : ViewModel() {
     private val _requestStatus = MutableLiveData<RequestStatus>()
@@ -23,7 +20,7 @@ class PostViewModel : ViewModel() {
     private val storage = FirebaseStorage.getInstance()
 
     fun getAllPosts() {
-        db.collection("Posts").orderBy("createdAt").get()
+        db.collection("Posts").orderBy("createdAt", Query.Direction.DESCENDING).get()
             .addOnSuccessListener { documents ->
                 Log.v("APP", documents.toString())
                 val postList = documents.toObjects(Post::class.java)
