@@ -64,8 +64,8 @@ class SignUpViewModel : ViewModel() {
     private fun returnUserAsJson(userProperties: UserProperties)
     : MutableMap<String, Any> {
         val user: MutableMap<String, Any> = HashMap()
-        user["firstName"] = userProperties.firstName
-        user["lastName"] = userProperties.lastName
+        user["firstName"] = userProperties.firstName.replaceFirstChar(Char::titlecase)
+        user["lastName"] = userProperties.lastName.replaceFirstChar(Char::titlecase)
         val randomUuid = UUID.randomUUID().toString()
         user["profilePhoto"] = "profilePictures/$randomUuid.jpg"
         return user

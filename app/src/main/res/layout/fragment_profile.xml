@@ -32,19 +32,25 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="20dp">
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="20dp">
 
             <TextView
                 android:id="@+id/user_profile_string"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="30dp"
                 android:gravity="center"
                 android:text="User's Profile"
                 android:textSize="18sp"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/three_dots_menu"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/three_dots_menu" />
 
             <Button
                 android:id="@+id/change_profile_picture_button"
@@ -55,13 +61,12 @@
                 android:textSize="11sp"
                 android:textColor="@color/white"
                 app:backgroundTint="@color/black"/>
+
         </LinearLayout>
 
 
 
     </LinearLayout>
-
-
 
 
 </RelativeLayout>

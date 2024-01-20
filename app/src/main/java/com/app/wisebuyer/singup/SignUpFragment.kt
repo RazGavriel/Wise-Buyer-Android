@@ -15,6 +15,7 @@ import com.app.wisebuyer.R
 import com.app.wisebuyer.login.UserCredentials
 import com.app.wisebuyer.utils.checkCredentials
 import com.app.wisebuyer.utils.isString
+import com.app.wisebuyer.utils.manageViews
 
 class SignUpFragment: Fragment() {
 
@@ -73,7 +74,7 @@ class SignUpFragment: Fragment() {
             }
             else {
                 resetParameters()
-                manageViews(emailInput, passwordInput, firstNameInput,
+                manageViews(emailInput, passwordInput, firstNameInput, messageBox,
                             lastNameInput, signUpButton, messageBox, mode="VISIBLE")
                 messageBox.text = result
             }
@@ -88,7 +89,7 @@ class SignUpFragment: Fragment() {
             if (checkCredentials(credentials, emailInput, passwordInput) &&
                 checkUserProperties(userProperties, firstNameInput, lastNameInput))
             {
-                manageViews(emailInput, passwordInput, firstNameInput,
+                manageViews(emailInput, passwordInput, firstNameInput, messageBox,
                           lastNameInput, signUpButton, mode="GONE")
                 progressBarSignUp.visibility = View.VISIBLE
                 signUpViewModel.signUpUser(credentials, userProperties)
@@ -107,12 +108,5 @@ class SignUpFragment: Fragment() {
         }
         else{ return true }
         return false
-    }
-
-    private fun manageViews(vararg views: View, mode: String) {
-        for (view in views) {
-            if (mode == "GONE") { view.visibility = View.GONE }
-            else{ view.visibility = View.VISIBLE }
-        }
     }
 }
