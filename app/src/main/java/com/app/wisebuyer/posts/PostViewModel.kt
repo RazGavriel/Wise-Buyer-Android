@@ -19,8 +19,15 @@ class PostViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
 
-    fun getAllPosts() {
-        db.collection("Posts").orderBy("createdAt", Query.Direction.DESCENDING).get()
+    fun getPosts(mode: String, inputFromUser: String) {
+        var query: Query = db.collection("Posts")
+
+        if (mode.isNotEmpty() && inputFromUser.isNotEmpty()) {
+            query = query.whereEqualTo(mode, inputFromUser)
+        }
+
+        query.orderBy("createdAt", Query.Direction.DESCENDING)
+            .get()
             .addOnSuccessListener { documents ->
                 Log.v("APP", documents.toString())
                 val postList = documents.toObjects(Post::class.java)
@@ -31,7 +38,7 @@ class PostViewModel : ViewModel() {
                 _requestStatus.value = RequestStatus.FAILURE
             }
     }
-
+    
     fun clear() {
         _requestStatus.value = RequestStatus.IDLE
     }
