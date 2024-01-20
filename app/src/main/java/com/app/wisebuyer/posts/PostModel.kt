@@ -1,4 +1,4 @@
-package com.app.wisebuyer.posts.new
+package com.app.wisebuyer.posts
 
 enum class ProductType(val type: String) {
     HOME("home"),
