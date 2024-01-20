@@ -40,5 +40,5 @@ data class Post(
     val price: String = "",
     var productPicture: String = "",
     var userEmail: String = "",
-    var createdAt: String = Date().time.toString()
+    var createdAt: Number = Date().time
 )
