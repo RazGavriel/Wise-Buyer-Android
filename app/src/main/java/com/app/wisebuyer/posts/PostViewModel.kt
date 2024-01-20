@@ -14,10 +14,10 @@ class PostViewModel : ViewModel() {
     private val _posts = MutableLiveData<List<Post>>()
 
     val posts: LiveData<List<Post>> get() = _posts
-    val requestStatus: LiveData<RequestStatus> get() = _requestStatus
+//    val requestStatus: LiveData<RequestStatus> get() = _requestStatus
 
     private val db = FirebaseFirestore.getInstance()
-    private val storage = FirebaseStorage.getInstance()
+//    private val storage = FirebaseStorage.getInstance()
 
     fun getPosts(mode: String, inputFromUser: String) {
         var query: Query = db.collection("Posts")
@@ -38,8 +38,8 @@ class PostViewModel : ViewModel() {
                 _requestStatus.value = RequestStatus.FAILURE
             }
     }
-    
-    fun clear() {
-        _requestStatus.value = RequestStatus.IDLE
-    }
+
+//    fun clear() {
+//        _requestStatus.value = RequestStatus.IDLE
+//    }
 }
