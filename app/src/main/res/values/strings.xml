@@ -61,4 +61,7 @@
     <string name="newFirstNameHint">New First Name</string>
     <string name="users_profile_default_string">User\'s Profile</string>
     <string name="search_string">search</string>
+    <string name="delete_string">DELETE</string>
+    <string name="thumbs_down_string">Thumbs down</string>
+    <string name="thumbs_up_string">Thumbs Up</string>
 </resources>
