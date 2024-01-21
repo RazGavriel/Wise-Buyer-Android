@@ -39,6 +39,9 @@ data class Post(
     val link: String = "",
     val price: String = "",
     var productPicture: String = "",
+    var id: String = "",
+    var thumbsUpUsers: List<String> = emptyList(),
+    var thumbsDownUsers: List<String> = emptyList(),
     var userEmail: String = "",
     var createdAt: Long = Date().time
 )
