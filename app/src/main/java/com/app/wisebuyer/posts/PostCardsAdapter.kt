@@ -52,7 +52,7 @@ class PostCardsAdapter(private val posts: List<Post>)
         storage.reference.child(post.productPicture).downloadUrl.addOnSuccessListener {
             Glide.with(holder.itemView)
                 .load(it)
-                .into(holder.image);
+                .into(holder.image)
         }
         holder.price.text = NumberFormat.getCurrencyInstance(Locale.US).format(post.price.toInt())
         "${post.title} | ${post.productType}".also { holder.title.text = it }
