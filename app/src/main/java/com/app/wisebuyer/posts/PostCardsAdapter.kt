@@ -8,23 +8,25 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.app.wisebuyer.R
+import com.app.wisebuyer.shared.PostBaseFragment
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.text.NumberFormat
 import java.util.Locale
 
-class PostCardsAdapter(private val posts: List<Post>) : RecyclerView.Adapter<PostCardsAdapter.PostViewHolder>() {
+
+class PostCardsAdapter(private val posts: List<Post>)
+    : RecyclerView.Adapter<PostCardsAdapter.PostViewHolder>() {
     private val storage = FirebaseStorage.getInstance()
-    private val db = FirebaseFirestore.getInstance()
+    private var onPostItemClickListener: OnPostItemClickListener? = null
     private val userEmail = FirebaseAuth.getInstance().currentUser?.email as String
 
+    interface OnPostItemClickListener {
+        fun onPostItemClicked(postId: String, postEmail: String,
+          holder: PostViewHolder, mode: String)
+
+    }
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.card_image)
         val title: TextView = itemView.findViewById(R.id.card_title)
@@ -40,6 +42,11 @@ class PostCardsAdapter(private val posts: List<Post>) : RecyclerView.Adapter<Pos
         val view = LayoutInflater.from(parent.context).inflate(R.layout.post_card_item, parent, false)
         return PostViewHolder(view)
     }
+
+    fun setOnPostItemClickListener(listener: PostBaseFragment) {
+        this.onPostItemClickListener = listener
+    }
+
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = posts[position]
         storage.reference.child(post.productPicture).downloadUrl.addOnSuccessListener {
@@ -51,106 +58,42 @@ class PostCardsAdapter(private val posts: List<Post>) : RecyclerView.Adapter<Pos
         "${post.title} | ${post.productType}".also { holder.title.text = it }
         holder.description.text = post.description
         holder.link.text = post.link
+        handleObjectPulling(holder, userEmail, post)
         handleClicksCard(holder, position)
-        handleThumbsOnStart(holder, position)
-    }
-
-    private fun handleThumbsOnStart(holder: PostViewHolder, position: Int) {
-        val post = posts[position]
-        fillThumbsUI(userEmail, post.thumbsUpUsers, post.thumbsDownUsers, holder)
-   }
-
-    private suspend fun cardDBHandler(postId: String, email: String,
-                                      holder: PostViewHolder, mode: String) {
-        if (mode == "ThumbsUp" || mode == "ThumbsDown") {
-            updateThumbsData(postId, email, mode, holder)
-        }
     }
 
     private fun handleClicksCard(holder: PostViewHolder, position: Int) {
+        val post = posts[position]
         holder.imageThumbsUp.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                cardDBHandler(posts[position].id, userEmail, holder,"ThumbsUp")
-            }
+            onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
+                holder,"ThumbsUp")
         }
+
         holder.imageThumbsDown.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                cardDBHandler(posts[position].id, userEmail, holder, "ThumbsDown")
-            }
+            onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
+                holder,"ThumbsDown")
         }
 
         holder.deleteCardButton.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                cardDBHandler(posts[position].id, userEmail, holder, "DeleteCard")
-            }
+            onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
+                holder,"DeleteCard")
         }
     }
-    private suspend fun updateThumbsData(postId: String, email: String, mode: String,
-                                         holder: PostViewHolder)
-    {
-        try {
-            val documentReference = db.collection("Posts").document(postId)
-            val documentSnapshot = documentReference.get().await()
-            if (documentSnapshot.exists()) {
-                val thumbsUpUsers = (documentSnapshot.get("thumbsUpUsers")
-                    as? List<String>)?.toMutableList() ?: mutableListOf()
-                val thumbsDownUsers = (documentSnapshot.get("thumbsDownUsers")
-                    as? List<String>)?.toMutableList() ?: mutableListOf()
-                val (finalThumbsUpUsers, finalThumbsDownUsers) =
-                    thumbsArrayHandler(mode, email, thumbsUpUsers, thumbsDownUsers)
 
-                documentReference.update("thumbsUpUsers", finalThumbsUpUsers,
-                    "thumbsDownUsers", finalThumbsDownUsers).await()
-                fillThumbsUI(email, finalThumbsUpUsers, finalThumbsDownUsers, holder)
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                showToast("It seems like there was an issue updating thumbs. " +
-                        "Please try again later.")
-            }
-        }
-    }
-    private fun thumbsArrayHandler(mode: String, email: String, thumbsUpUsers: MutableList<String>,
-                                   thumbsDownUsers: MutableList<String>
-    ): Pair<MutableList<String>, MutableList<String>> {
-        when (mode) {
-            "ThumbsUp" -> {
-                when (email) {
-                    in thumbsUpUsers -> { thumbsUpUsers.remove(email) }
-                    in thumbsDownUsers -> {
-                        thumbsDownUsers.remove(email)
-                        thumbsUpUsers.add(email)
-                    }
-                    else -> { thumbsUpUsers.add(email) }
-                }
-            }
-            "ThumbsDown" -> {
-                when (email) {
-                    in thumbsDownUsers -> { thumbsDownUsers.remove(email) }
-                    in thumbsUpUsers -> {
-                        thumbsUpUsers.remove(email)
-                        thumbsDownUsers.add(email)
-                    }
-                    else -> { thumbsDownUsers.add(email) }
-                }
-            }
-        }
-        return Pair(thumbsUpUsers, thumbsDownUsers)
-    }
-    private fun fillThumbsUI(email: String, finalThumbsUpUsers: List<String>,
-                             finalThumbsDownUsers : List<String>, holder: PostViewHolder){
+    private fun handleObjectPulling(holder: PostViewHolder, userEmail: String, post: Post) {
         holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_blank)
         holder.imageThumbsDown.setImageResource(R.drawable.thumb_down_blank)
-        when (email) {
-            in finalThumbsUpUsers -> {
+        when (userEmail) {
+            in post.thumbsUpUsers -> {
                 holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_filled)
             }
-            in finalThumbsDownUsers -> {
+            in post.thumbsDownUsers -> {
                 holder.imageThumbsDown.setImageResource(R.drawable.thumb_down_filled)
             }
         }
+        if (post.userEmail == userEmail) { holder.deleteCardButton.visibility = View.VISIBLE }
+        else { holder.deleteCardButton.visibility = View.GONE }
     }
-    private suspend fun showToast(message: String) { withContext(Dispatchers.Main) {} }
 
     override fun getItemCount(): Int {
         return posts.size
