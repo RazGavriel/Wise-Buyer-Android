@@ -45,3 +45,10 @@ data class Post(
     var userEmail: String = "",
     var createdAt: Long = Date().time
 )
+
+data class LikeRequestStatus(
+    val postEmail: String,
+    val thumbsUpUsers: List<String>,
+    val thumbsDownUsers: List<String>,
+    val holder: PostCardsAdapter.PostViewHolder
+)
