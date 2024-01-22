@@ -8,12 +8,16 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.app.wisebuyer.MainActivity
 import com.app.wisebuyer.R
 import com.app.wisebuyer.posts.LikeRequestStatus
 import com.app.wisebuyer.posts.Post
 import com.app.wisebuyer.posts.PostCardsAdapter
 import com.app.wisebuyer.posts.PostViewModel
+import com.app.wisebuyer.profile.UserMetaData
+import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.RequestStatus
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -58,6 +62,23 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
                         "Please try again later.")
             }
         }
+    }
+
+    fun observeInitializeUserDataStatus(postViewModel: PostViewModel) {
+        postViewModel.initializeUserDataStatus.observe(viewLifecycleOwner) { result: UserMetaData? ->
+            if (result!!.email != ""){
+                sharedViewModel.userMetaData = result
+                updateHeaderNavigationDrawer()
+            }
+            else{
+                findNavController().navigate(R.id.loginFragment)
+            }
+        }
+    }
+
+    fun updateHeaderNavigationDrawer(){
+        (activity as MainActivity).updateHeaderUserName(UserProperties(
+            sharedViewModel.userMetaData.firstName, sharedViewModel.userMetaData.lastName))
     }
 
     private fun handleUIAfterLike(result: LikeRequestStatus) {
@@ -115,4 +136,13 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
             postViewModel.getPosts("userEmail", sharedViewModel.userMetaData.email)
         }
     }
+
+    fun checkInitializationShareViewModel(){
+        if (sharedViewModel.userMetaData.email == ""){
+            postViewModel.getUserMetaData()
+        }
+    }
+
+
+
 }
