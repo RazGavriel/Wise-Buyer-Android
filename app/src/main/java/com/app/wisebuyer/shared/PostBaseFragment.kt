@@ -19,6 +19,7 @@ import com.app.wisebuyer.posts.PostViewModel
 import com.app.wisebuyer.profile.UserMetaData
 import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.RequestStatus
+import com.app.wisebuyer.utils.closeKeyboard
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
@@ -41,6 +42,7 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
             val postCardsAdapter = PostCardsAdapter(posts)
             postCardsAdapter.setOnPostItemClickListener(this)
             recyclerView.adapter = postCardsAdapter
+            closeKeyboard(requireContext(), requireView())
         }
     }
 
