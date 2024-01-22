@@ -15,10 +15,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.app.wisebuyer.singup.UserProperties
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
@@ -28,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var headerView: View
     private lateinit var headerUsernameTextView: TextView
     private lateinit var toolbar: Toolbar
+    private lateinit var auth: FirebaseAuth
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,11 +48,11 @@ class MainActivity : AppCompatActivity() {
         setupNavigationView()
 
 //      if user is logged in go to main page
-        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-        if (user != null) {
-            navController.navigate(R.id.action_loginFragment_to_postsFragment)
-            // TOOD: update shared view model
-        }
+//        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+//        if (user != null) {
+//            navController.navigate(R.id.action_loginFragment_to_postsFragment)
+//            // TOOD: update shared view model
+//        }
     }
 
     private fun setupNavController() {
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.postsFragment, R.id.privacyPolicyFragment,
-                R.id.contactUsFragment, R.id.profileFragment
+                R.id.contactUsFragment, R.id.profileFragment, R.id.LogoutFragment
             ), drawerLayout
         )
         findViewById<Toolbar>(R.id.toolbar)
@@ -93,6 +94,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         navigationView.setupWithNavController(navController)
+        handleLogout()
+
     }
 
     fun updateHeaderUserName(userProperties: UserProperties) {
@@ -112,4 +115,29 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+    private fun handleLogout() {
+        navigationView.menu
+            .findItem(R.id.LogoutFragment)
+            .setOnMenuItemClickListener { menuItem ->
+                logoutDialog()
+                true
+            }
+    }
+
+    private fun logoutDialog(){
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Yes") { _, _ ->
+                auth = FirebaseAuth.getInstance()
+                auth.signOut()
+                navController.navigate(R.id.loginFragment)
+                drawerLayout.closeDrawer(GravityCompat.START)
+
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
 }
+
