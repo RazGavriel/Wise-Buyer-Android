@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -116,12 +117,11 @@ class ProfileFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickList
                 .inflate(R.layout.dialog_change_name, null)
             val firstNameInput = dialogView.findViewById<EditText>(R.id.firstNameInput)
             val lastNameInput = dialogView.findViewById<EditText>(R.id.lastNameInput)
-
             val title = "Full Name - ${sharedViewModel.userMetaData.firstName} " +
                     "${sharedViewModel.userMetaData.lastName}\nChange to :"
+
             val spannableTitle = SpannableString(title)
-            spannableTitle.setSpan(
-                StyleSpan(Typeface.BOLD), 0,
+            spannableTitle.setSpan(StyleSpan(Typeface.BOLD), 0,
                 title.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             MaterialAlertDialogBuilder(requireContext())
@@ -159,13 +159,17 @@ class ProfileFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickList
 
     private fun observeChangeName() {
         profileViewModel.changeNameResult.observe(viewLifecycleOwner) { result: UserProperties? ->
-            if (result != null) {
-                sharedViewModel.userMetaData.firstName = result.firstName
-                sharedViewModel.userMetaData.lastName = result.lastName
-                showDialogResponse("Name changed successfully :)")
-                initializeUserName()
-            } else {
-                showDialogResponse("Error while changing your name")
+            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (result != null) {
+                    sharedViewModel.userMetaData.firstName = result.firstName
+                    sharedViewModel.userMetaData.lastName = result.lastName
+                    showDialogResponse("Name changed successfully :)")
+                    initializeUserName()
+                    profileViewModel.changeNameResult.removeObservers(viewLifecycleOwner)
+
+                } else {
+                    showDialogResponse("Error while changing your name")
+                }
             }
         }
     }
