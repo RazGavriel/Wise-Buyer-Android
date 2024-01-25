@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/primary_group">
+        <item
+            android:id="@+id/profileFragment"
+            android:icon="@drawable/profile_icon"
+            android:title="@string/profileString"
+            />
+        <item
+            android:id="@+id/postsFragment"
+            android:icon="@drawable/feed_icon"
+            android:title="@string/feedString"
+            />
+    </group>
+    <group android:id="@+id/second_group">
+        <item
+            android:id="@+id/privacyPolicyFragment"
+            android:icon="@drawable/privacy_policy_icon"
+            android:title="@string/privacyPolicyString"/>
+
+        <item
+            android:id="@+id/contactUsFragment"
+            android:icon="@drawable/contact_us_icon"
+            android:title="@string/contactUsString"/>
+        <item
+            android:id="@+id/LogoutFragment"
+            android:icon="@drawable/logout"
+            android:title="@string/logout_string"/>
+    </group>
+</menu>

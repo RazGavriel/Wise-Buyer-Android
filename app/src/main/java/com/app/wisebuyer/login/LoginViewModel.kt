@@ -1,27 +1,40 @@
-package com.app.wisebuyer.login
-
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Firebase
+import com.app.wisebuyer.login.UserCredentials
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 
-class LoginViewModel: ViewModel() {
-    private val _loginResult = MutableLiveData<Boolean>()
-    val loginResult: LiveData<Boolean> get() = _loginResult
 
-    private lateinit var auth : FirebaseAuth
+class LoginViewModel : ViewModel() {
+
+    private val _loginResult = MutableLiveData<Pair<HashMap<String,Any>, String>>()
+    val loginResult: LiveData<Pair<HashMap<String,Any>, String>> get() = _loginResult
+
+    private lateinit var auth: FirebaseAuth
+    val db = FirebaseFirestore.getInstance()
+
 
     fun loginUser(credentials: UserCredentials) {
-        auth = Firebase.auth
+        auth = FirebaseAuth.getInstance()
         auth.signInWithEmailAndPassword(credentials.email, credentials.password)
-            .addOnCompleteListener { task ->
-                _loginResult.value = task.isSuccessful
+            .addOnSuccessListener {
+                db.collection("Users").document(credentials.email)
+                    .get()
+                    .addOnSuccessListener { result ->
+                        Log.w("APP", "${result.id} => ${result.data}")
+                        _loginResult.value = Pair(result.data as HashMap<String, Any>, result.id)
+                    }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("APP", "Error getting documents.", exception)
+                _loginResult.value = Pair(hashMapOf<String, Any>(), "")
             }
     }
 
     fun clearLoginResult() {
-        _loginResult.value = false
+        _loginResult.value = Pair(hashMapOf<String, Any>(), "")
     }
+
 }

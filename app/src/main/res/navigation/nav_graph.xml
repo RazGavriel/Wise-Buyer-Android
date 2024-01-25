@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
-
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.app.wisebuyer.login.LoginFragment"
@@ -15,20 +14,38 @@
             android:id="@+id/action_loginFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.app.wisebuyer.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/postsFragment"
         android:name="com.app.wisebuyer.posts.PostsFragment"
-        android:label="PostsFragment" >
-        <action
-            android:id="@+id/action_postsFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-    </fragment>
+        android:label="PostsFragment" />
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.app.wisebuyer.singup.SignupFragment"
+        android:name="com.app.wisebuyer.singup.SignUpFragment"
         android:label="SignupFragment" >
         <action
             android:id="@+id/action_signupFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/privacyPolicyFragment"
+        android:name="com.app.wisebuyer.privacyPolicy.PrivacyPolicyFragment"
+        android:label="PrivacyPolicyFragment" />
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.app.wisebuyer.contactUs.ContactUsFragment"
+        android:label="ContactUsFragment" />
+    <fragment
+        android:id="@+id/newPostFragment"
+        android:name="com.app.wisebuyer.posts.new.NewPostFragment"
+        android:label="NewPostFragment" />
 </navigation>
