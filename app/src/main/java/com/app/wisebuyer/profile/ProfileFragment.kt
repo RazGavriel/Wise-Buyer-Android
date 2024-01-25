@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,16 +23,26 @@ import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.ProgressBar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.app.wisebuyer.MainActivity
+import com.app.wisebuyer.posts.Post
+import com.app.wisebuyer.posts.PostCardsAdapter
+import com.app.wisebuyer.posts.PostViewModel
 import com.app.wisebuyer.shared.SharedViewModel
 import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.RequestStatus
 import com.app.wisebuyer.utils.isString
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
 class ProfileFragment : Fragment() {
     private val profileViewModel: ProfileViewModel by activityViewModels()
+    private val postViewModel: PostViewModel by activityViewModels()
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var addNewPostButton: FloatingActionButton
 
     private lateinit var userProfileString: TextView
     private lateinit var changeProfilePictureButton: Button
@@ -48,25 +59,52 @@ class ProfileFragment : Fragment() {
         val view: View = inflater.inflate(
             R.layout.fragment_profile, container, false
         )
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
 
+        initViews(view)
+        initializeUserName()
+        handleChangeProfilePicture()
+        handleAddNewClick()
+        setupRecyclerView()
+        handleChangeName()
+
+        postViewModel.getPosts("userEmail", sharedViewModel.userMetaData.email)
+        profileViewModel.getProfileImage(sharedViewModel.userMetaData)
+
+        observeShowProfilePhoto()
+        observeChangeName()
+        observeUploadProfileImage()
+        observePostViewModel()
+
+        return view
+
+    }
+
+    private fun initViews(view: View) {
         userProfileString = view.findViewById<TextView>(R.id.user_profile_string)
         changeProfilePictureButton = view.findViewById<Button>(R.id.change_profile_picture_button)
         progressBarProfilePhoto = view.findViewById<ProgressBar>(R.id.progress_bar_profile_photo)
         profileImage = view.findViewById<ImageView>(R.id.profile_image)
         threeDotsMenu = view.findViewById<ImageView>(R.id.three_dots_menu)
+        recyclerView = view.findViewById(R.id.posts_recycler_view)
+        addNewPostButton = view.findViewById(R.id.add_new_post_button)
+    }
 
-        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-        initializeUserName()
-        observeShowProfilePhoto()
-        observeChangeName()
-        observeUploadProfileImage()
-        handleChangeProfilePicture()
-        handleChangeName()
+    private fun setupRecyclerView() {
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    }
 
-        profileViewModel.getProfileImage(sharedViewModel.userMetaData)
+    private fun observePostViewModel() {
+        postViewModel.posts.observe(viewLifecycleOwner) { posts: List<Post> ->
+            Log.v("APP", posts.toString())
+            recyclerView.adapter = PostCardsAdapter(posts)
+        }
+    }
 
-        return view
-
+    private fun handleAddNewClick() {
+        addNewPostButton.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_newPostFragment)
+        }
     }
 
     private fun initializeUserName() {

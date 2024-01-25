@@ -9,15 +9,12 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PostsFragment : Fragment() {
 
     private val postViewModel: PostViewModel by activityViewModels()
-    private lateinit var addNewPostButton: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
 
@@ -31,10 +28,9 @@ class PostsFragment : Fragment() {
 
         initViews(view)
         setupRecyclerView()
-        handleAddNewClick()
 
         // fetch all posts
-        postViewModel.getAllPosts()
+        postViewModel.getPosts("", "")
 
         observePostViewModel()
 
@@ -42,19 +38,12 @@ class PostsFragment : Fragment() {
     }
 
     private fun initViews(view: View) {
-        addNewPostButton = view.findViewById(R.id.add_new_post_button)
         recyclerView = view.findViewById(R.id.posts_recycler_view)
         progressBar = view.findViewById(R.id.progress_bar_posts)
     }
 
     private fun setupRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-    }
-
-    private fun handleAddNewClick() {
-        addNewPostButton.setOnClickListener {
-            findNavController().navigate(R.id.action_postsFragment_to_newPostFragment)
-        }
     }
 
     private fun observePostViewModel() {

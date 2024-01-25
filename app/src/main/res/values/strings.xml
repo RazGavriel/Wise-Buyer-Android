@@ -59,4 +59,6 @@
     <string name="contactUsString">Contact Us</string>
     <string name="newLastNameHint">New Last Name</string>
     <string name="newFirstNameHint">New First Name</string>
+    <string name="users_profile_default_string">User\'s Profile</string>
+    <string name="search_string">search</string>
 </resources>
