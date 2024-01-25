@@ -1,45 +1,43 @@
 package com.app.wisebuyer.posts
-
-import com.app.wisebuyer.R
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.app.wisebuyer.R
+import com.app.wisebuyer.shared.PostBaseFragment
 
-class PostsFragment : Fragment() {
+class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListener {
 
-    private val postViewModel: PostViewModel by activityViewModels()
+    private val postViewModel: PostViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar: ProgressBar
+
+    override fun getLayoutResourceId(): Int {
+        return R.layout.fragment_posts
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
-        container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        val view: View = inflater.inflate(
-            R.layout.fragment_posts, container, false
-        )
-
-        initViews(view)
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view: View? = super.onCreateView(inflater, container, savedInstanceState)
+        if (view != null) {
+            initViews(view)
+        }
         setupRecyclerView()
-
-        // fetch all posts
-        postViewModel.getPosts("", "")
-
         observePostViewModel()
+        observeRequestStatus()
+        observeLikeRequestStatus()
 
+        postViewModel.getPosts("", "")
         return view
     }
 
     private fun initViews(view: View) {
         recyclerView = view.findViewById(R.id.posts_recycler_view)
-        progressBar = view.findViewById(R.id.progress_bar_posts)
     }
 
     private fun setupRecyclerView() {
@@ -47,10 +45,14 @@ class PostsFragment : Fragment() {
     }
 
     private fun observePostViewModel() {
-        postViewModel.posts.observe(viewLifecycleOwner) { posts: List<Post> ->
-            Log.v("APP", posts.toString())
-            recyclerView.adapter = PostCardsAdapter(posts)
-            progressBar.visibility = View.GONE
-        }
+        observePostViewModel(postViewModel, recyclerView)
+    }
+
+    private fun observeRequestStatus() {
+        observeRequestStatus(postViewModel)
+    }
+
+    private fun observeLikeRequestStatus() {
+        observeLikeRequestStatus(postViewModel)
     }
 }
