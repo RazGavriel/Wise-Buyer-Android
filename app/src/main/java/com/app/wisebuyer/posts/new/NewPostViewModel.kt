@@ -47,11 +47,21 @@ class NewPostViewModel : ViewModel() {
     private fun savePost(post: Post) {
         val gson = Gson()
         val postJson = gson.toJson(post)
-
         db.collection("Posts")
             .add(gson.fromJson(postJson, Map::class.java))
-            .addOnSuccessListener {
-                _requestStatus.value = RequestStatus.SUCCESS
+            .addOnSuccessListener { documentReference ->
+                val postId = documentReference.id
+
+                // Update the 'id' field in the document with the document ID
+                db.collection("Posts")
+                    .document(postId)
+                    .update("id", postId)
+                    .addOnSuccessListener {
+                        _requestStatus.value = RequestStatus.SUCCESS
+                    }
+                    .addOnFailureListener {
+                        _requestStatus.value = RequestStatus.FAILURE
+                    }
             }
             .addOnFailureListener {
                 _requestStatus.value = RequestStatus.FAILURE
