@@ -28,9 +28,12 @@ class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListen
             initViews(view)
         }
         setupRecyclerView()
+        checkInitializationShareViewModel()
+
         observePostViewModel()
         observeRequestStatus()
         observeLikeRequestStatus()
+        observeInitializeUserDataStatus()
 
         postViewModel.getPosts("", "")
         return view
@@ -54,5 +57,9 @@ class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListen
 
     private fun observeLikeRequestStatus() {
         observeLikeRequestStatus(postViewModel)
+    }
+
+    private fun observeInitializeUserDataStatus() {
+        observeInitializeUserDataStatus(postViewModel)
     }
 }

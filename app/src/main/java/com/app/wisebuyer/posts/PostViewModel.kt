@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.app.wisebuyer.profile.UserMetaData
 import com.app.wisebuyer.utils.RequestStatus
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -12,11 +14,16 @@ class PostViewModel : ViewModel() {
     private val _requestStatus = MutableLiveData<RequestStatus>()
     private val _posts = MutableLiveData<List<Post>>()
     private val _likeRequestStatus = MutableLiveData<LikeRequestStatus?>()
+    private val _initializeUserDataStatus = MutableLiveData<UserMetaData?>()
     val posts: LiveData<List<Post>> get() = _posts
     val requestStatus: LiveData<RequestStatus> get() = _requestStatus
     val likeRequestStatus: MutableLiveData<LikeRequestStatus?> get() = _likeRequestStatus
+    val initializeUserDataStatus: MutableLiveData<UserMetaData?> get() = _initializeUserDataStatus
 
     private val db = FirebaseFirestore.getInstance()
+
+    private lateinit var auth: FirebaseAuth
+
 
     fun getPosts(mode: String, inputFromUser: String) {
         var query: Query = db.collection("Posts")
@@ -102,5 +109,26 @@ class PostViewModel : ViewModel() {
             }
         }
         return Pair(thumbsUpUsers, thumbsDownUsers)
+    }
+
+    fun getUserMetaData(){
+        val auth = FirebaseAuth.getInstance()
+        var newUserMetaData = UserMetaData("","","","")
+        val user = auth.currentUser
+        val email = user?.email
+        if (user != null) {
+            db.collection("Users").document(email.toString())
+                .get()
+                .addOnSuccessListener {
+                    newUserMetaData = UserMetaData(email = user.email!!,
+                        firstName = it.data?.get("firstName") as String,
+                        lastName = it.data!!["lastName"] as String,
+                        profilePhoto = it.data!!["profilePhoto"] as String)
+
+                }
+                .addOnCompleteListener {
+                    initializeUserDataStatus.value = newUserMetaData
+                }
+        }
     }
 }

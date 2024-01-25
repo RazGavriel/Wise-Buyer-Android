@@ -18,6 +18,7 @@ import com.app.wisebuyer.singup.UserProperties
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
@@ -28,8 +29,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var headerUsernameTextView: TextView
     private lateinit var toolbar: Toolbar
     private lateinit var auth: FirebaseAuth
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +46,10 @@ class MainActivity : AppCompatActivity() {
         setupDrawer()
         setupNavigationView()
 
-//      if user is logged in go to main page
-//        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-//        if (user != null) {
-//            navController.navigate(R.id.action_loginFragment_to_postsFragment)
-//            // TOOD: update shared view model
-//        }
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            navController.navigate(R.id.action_loginFragment_to_postsFragment)
+        }
     }
 
     private fun setupNavController() {

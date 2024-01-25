@@ -66,6 +66,7 @@ class ProfileFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickList
         handleAddNewClick()
         setupRecyclerView()
         handleChangeName()
+        checkInitializationShareViewModel()
 
         observeShowProfilePhoto()
         observeChangeName()
@@ -73,6 +74,8 @@ class ProfileFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickList
         observePostViewModel()
         observeRequestStatus()
         observeLikeRequestStatus()
+        observeInitializeUserDataStatus()
+
         postViewModel.getPosts("userEmail", sharedViewModel.userMetaData.email)
         profileViewModel.getProfileImage(sharedViewModel.userMetaData)
         return view
@@ -88,6 +91,10 @@ class ProfileFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickList
         addNewPostButton = view.findViewById(R.id.add_new_post_button)
     }
 
+    private fun observeInitializeUserDataStatus() {
+        observeInitializeUserDataStatus(postViewModel)
+    }
+
     private fun handleAddNewClick() {
         addNewPostButton.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_newPostFragment)
@@ -96,9 +103,7 @@ class ProfileFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickList
 
     private fun initializeUserName() {
         "${sharedViewModel.userMetaData.firstName}'s Profile".also { userProfileString.text = it }
-        (activity as MainActivity).updateHeaderUserName(
-            UserProperties(sharedViewModel.userMetaData.firstName,
-                sharedViewModel.userMetaData.lastName))
+        updateHeaderNavigationDrawer()
     }
 
     private val pickImageContract = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
