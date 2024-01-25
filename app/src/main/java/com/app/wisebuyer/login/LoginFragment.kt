@@ -18,6 +18,7 @@ import com.app.wisebuyer.MainActivity
 import com.app.wisebuyer.shared.SharedViewModel
 import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.checkCredentials
+import com.app.wisebuyer.utils.closeKeyboard
 import com.app.wisebuyer.utils.manageViews
 
 class LoginFragment : Fragment() {
@@ -70,7 +71,7 @@ class LoginFragment : Fragment() {
                 (activity as MainActivity).updateHeaderUserName(
                     UserProperties(sharedViewModel.userMetaData.firstName,
                                    sharedViewModel.userMetaData.lastName))
-
+                closeKeyboard(requireContext(), requireView())
                 findNavController().navigate(R.id.action_loginFragment_to_postsFragment)
             }
             else {
@@ -104,6 +105,7 @@ class LoginFragment : Fragment() {
     }
     private fun handleSignUpClick(signupButton:Button) {
         signupButton.setOnClickListener{
+            closeKeyboard(requireContext(), requireView())
             findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
         }
     }
