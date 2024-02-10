@@ -10,7 +10,7 @@ interface PostDao {
     @Query("SELECT * FROM post ORDER BY createdAt desc")
     fun getAll(): List<Post>
 
-    @Query("SELECT * FROM post WHERE userEmail = :email")
+    @Query("SELECT * FROM post WHERE userEmail = :email ORDER BY createdAt desc")
     fun getAllPostByUserEmail(email: String): List<Post>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsert(vararg post: Post)
