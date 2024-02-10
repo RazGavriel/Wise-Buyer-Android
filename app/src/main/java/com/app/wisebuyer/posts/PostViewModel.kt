@@ -1,16 +1,19 @@
 package com.app.wisebuyer.posts
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.wisebuyer.profile.UserMetaData
+import com.app.wisebuyer.room.getWiseBuyerLocalDatabase
 import com.app.wisebuyer.utils.RequestStatus
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-class PostViewModel : ViewModel() {
+class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _requestStatus = MutableLiveData<RequestStatus>()
     private val _posts = MutableLiveData<List<Post>>()
     private val _likeRequestStatus = MutableLiveData<LikeRequestStatus?>()
@@ -22,8 +25,7 @@ class PostViewModel : ViewModel() {
 
     private val db = FirebaseFirestore.getInstance()
 
-    private lateinit var auth: FirebaseAuth
-
+    private val localDatabase = getWiseBuyerLocalDatabase(application.applicationContext)
 
     fun getPosts(mode: String, inputFromUser: String) {
         var query: Query = db.collection("Posts")
