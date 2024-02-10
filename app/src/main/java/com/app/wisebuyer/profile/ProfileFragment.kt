@@ -216,7 +216,7 @@ class ProfileFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickList
     }
 
     private fun observePostViewModel() {
-        observePostViewModel(postViewModel, recyclerView)
+        observePostViewModel(postViewModel, recyclerView, null)
     }
 
     private fun observeRequestStatus() {

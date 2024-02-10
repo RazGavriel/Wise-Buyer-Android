@@ -1,5 +1,7 @@
 package com.app.wisebuyer.posts
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.wisebuyer.R
 import com.app.wisebuyer.shared.PostBaseFragment
+import com.google.android.material.textfield.TextInputEditText
 
 class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListener {
 
     private val postViewModel: PostViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
+    private lateinit var searchInput: TextInputEditText
 
     override fun getLayoutResourceId(): Int {
         return R.layout.fragment_posts
@@ -29,6 +33,7 @@ class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListen
         }
         setupRecyclerView()
         checkInitializationShareViewModel()
+        observeSearchPost()
 
         observePostViewModel()
         observeRequestStatus()
@@ -41,14 +46,25 @@ class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListen
 
     private fun initViews(view: View) {
         recyclerView = view.findViewById(R.id.posts_recycler_view)
+        searchInput = view.findViewById(R.id.search_input)
     }
 
     private fun setupRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
+    private fun observeSearchPost() {
+        searchInput.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(editable: Editable?) {
+                observePostViewModel(postViewModel, recyclerView, editable.toString())
+            }
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        });
+    }
     private fun observePostViewModel() {
-        observePostViewModel(postViewModel, recyclerView)
+        observePostViewModel(postViewModel, recyclerView,null)
     }
 
     private fun observeRequestStatus() {

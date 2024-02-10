@@ -38,9 +38,16 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
 
     abstract fun getLayoutResourceId(): Int
 
-    fun observePostViewModel(postViewModel: PostViewModel, recyclerView: RecyclerView) {
+    fun observePostViewModel(postViewModel: PostViewModel, recyclerView: RecyclerView, query: String?) {
         postViewModel.posts.observe(viewLifecycleOwner) { posts: List<Post> ->
-            val postCardsAdapter = PostCardsAdapter(posts)
+            var displayedPost: List<Post> = posts;
+            if(query != null && query != "") {
+                displayedPost = posts.filter { post ->
+                    post.title.contains(query, ignoreCase = true)
+                }
+            }
+
+            val postCardsAdapter = PostCardsAdapter(displayedPost)
             postCardsAdapter.setOnPostItemClickListener(this)
             recyclerView.adapter = postCardsAdapter
             closeKeyboard(requireContext(), requireView())
