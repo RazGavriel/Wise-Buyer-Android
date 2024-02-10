@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.wisebuyer.posts.Post
+import com.app.wisebuyer.posts.ProductType
 import com.app.wisebuyer.utils.RequestStatus
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -61,12 +62,18 @@ class EditPostViewModel : ViewModel() {
     }
 
     private fun updatePostById(updatedPost: Post) {
-        val gson = Gson()
-        val postJson = gson.toJson(updatedPost)
+        val postMap = mapOf(
+            "title" to updatedPost.title,
+            "userEmail" to updatedPost.userEmail,
+            "productPicture" to updatedPost.productPicture,
+            "productType" to updatedPost.productType,
+            "link" to updatedPost.link,
+            "price" to updatedPost.price
+        )
 
         db.collection("Posts")
             .document(updatedPost.id)
-            .set(gson.fromJson(postJson, Map::class.java))
+            .update(postMap)
             .addOnSuccessListener {
                 _requestStatus.value = RequestStatus.SUCCESS
             }
