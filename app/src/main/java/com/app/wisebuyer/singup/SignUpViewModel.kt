@@ -42,18 +42,15 @@ class SignUpViewModel : ViewModel() {
                         .set(user)
                         .addOnSuccessListener {
                             _signUpResult.value = "Success"
-                            Log.w("APP", "created user")
                         }
                         .addOnFailureListener {
                             _signUpResult.value = "Cannot upload first profile image"
-                            Log.v("APP", "Cannot upload first profile image")
                         }
                 }
             }
 
             .addOnFailureListener {
                 _signUpResult.value = "The email is already in use"
-                Log.v("APP", "The email is already in use")
             }
     }
     fun clearSignUpResult() {

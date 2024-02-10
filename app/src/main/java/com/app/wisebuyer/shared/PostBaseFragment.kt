@@ -1,10 +1,11 @@
 package com.app.wisebuyer.shared
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +22,7 @@ import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.RequestStatus
 import com.app.wisebuyer.utils.closeKeyboard
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
+import com.app.wisebuyer.utils.showDialogResponse
 
 abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickListener {
     lateinit var sharedViewModel: SharedViewModel
@@ -37,9 +38,16 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
 
     abstract fun getLayoutResourceId(): Int
 
-    fun observePostViewModel(postViewModel: PostViewModel, recyclerView: RecyclerView) {
+    fun observePostViewModel(postViewModel: PostViewModel, recyclerView: RecyclerView, query: String?) {
         postViewModel.posts.observe(viewLifecycleOwner) { posts: List<Post> ->
-            val postCardsAdapter = PostCardsAdapter(posts)
+            var displayedPost: List<Post> = posts;
+            if(query != null && query != "") {
+                displayedPost = posts.filter { post ->
+                    post.title.contains(query, ignoreCase = true)
+                }
+            }
+
+            val postCardsAdapter = PostCardsAdapter(displayedPost)
             postCardsAdapter.setOnPostItemClickListener(this)
             recyclerView.adapter = postCardsAdapter
             closeKeyboard(requireContext(), requireView())
@@ -50,7 +58,7 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
         postViewModel.requestStatus.observe(viewLifecycleOwner) { result ->
             if (result == RequestStatus.FAILURE) {
                 showDialogResponse("Something went wrong while processing your request. " +
-                        "Please try again later.")
+                        "Please try again later.", requireView())
             }
         }
     }
@@ -61,7 +69,7 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
                 handleUIAfterLike(result)
             } else {
                 showDialogResponse("Something went wrong while processing your request. " +
-                        "Please try again later.")
+                        "Please try again later.", requireView())
             }
         }
     }
@@ -86,6 +94,8 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
     private fun handleUIAfterLike(result: LikeRequestStatus) {
         result.holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_blank)
         result.holder.imageThumbsDown.setImageResource(R.drawable.thumb_down_blank)
+        result.holder.textThumbsUp.text = result.thumbsUpUsers.size.toString()
+        result.holder.textThumbsDown.text = result.thumbsDownUsers.size.toString()
         when (sharedViewModel.userMetaData.email) {
             in result.thumbsUpUsers -> {
                 result.holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_filled)
@@ -97,16 +107,6 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
         if (result.postEmail == sharedViewModel.userMetaData.email){
             result.holder.deleteCardButton.visibility = View.VISIBLE }
         else{ result.holder.deleteCardButton.visibility = View.GONE }
-    }
-
-    open fun showDialogResponse(message: String) {
-        val rootView: View = requireView()
-        val snackBar = Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
-        val snackBarView: View = snackBar.view
-        snackBarView.setBackgroundColor(resources.getColor(R.color.black))
-        val textView: TextView = snackBarView.findViewById(com.google.android.material.R.id.snackbar_text)
-        textView.setTextColor(resources.getColor(R.color.white)) // Set your desired text color
-        snackBar.show()
     }
 
     override fun onPostItemClicked(postId: String, postEmail: String,
@@ -126,6 +126,12 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
+        } else if (mode == "EditCard") {
+            val args = Bundle().apply { putString("postId", postId) }
+            findNavController().navigate(R.id.editPostFragment, args);
+        } else if (mode == "LinkHandler"){
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(postId))
+            context?.startActivity(browserIntent)
         }
     }
 

@@ -23,12 +23,10 @@ class LoginViewModel : ViewModel() {
                 db.collection("Users").document(credentials.email)
                     .get()
                     .addOnSuccessListener { result ->
-                        Log.w("APP", "${result.id} => ${result.data}")
                         _loginResult.value = Pair(result.data as HashMap<String, Any>, result.id)
                     }
             }
             .addOnFailureListener { exception ->
-                Log.w("APP", "Error getting documents.", exception)
                 _loginResult.value = Pair(hashMapOf<String, Any>(), "")
             }
     }
