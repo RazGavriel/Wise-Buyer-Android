@@ -1,13 +1,11 @@
 package com.app.wisebuyer.posts
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.app.wisebuyer.R
 import com.app.wisebuyer.shared.PostBaseFragment
@@ -37,6 +35,8 @@ class PostCardsAdapter(private val posts: List<Post>)
         val price: TextView = itemView.findViewById(R.id.card_price)
         val imageThumbsUp: ImageView = itemView.findViewById(R.id.image_thumbs_up)
         val imageThumbsDown: ImageView = itemView.findViewById(R.id.image_thumbs_down)
+        val textThumbsUp: TextView = itemView.findViewById(R.id.text_thumbs_up)
+        val textThumbsDown: TextView = itemView.findViewById(R.id.text_thumbs_down)
         val deleteCardButton: Button = itemView.findViewById(R.id.delete_card_button)
         val editCardButton: Button = itemView.findViewById(R.id.edit_card_button)
     }
@@ -68,29 +68,46 @@ class PostCardsAdapter(private val posts: List<Post>)
     private fun handleClicksCard(holder: PostViewHolder, position: Int) {
         val post = posts[position]
         holder.imageThumbsUp.setOnClickListener {
-            onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
-                holder,"ThumbsUp")
+            onPostItemClickListener?.onPostItemClicked(
+                post.id, post.userEmail,
+                holder, "ThumbsUp"
+            )
         }
 
         holder.imageThumbsDown.setOnClickListener {
-            onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
-                holder,"ThumbsDown")
+            onPostItemClickListener?.onPostItemClicked(
+                post.id, post.userEmail,
+                holder, "ThumbsDown"
+            )
         }
 
         holder.deleteCardButton.setOnClickListener {
-            onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
-                holder,"DeleteCard")
+            onPostItemClickListener?.onPostItemClicked(
+                post.id, post.userEmail,
+                holder, "DeleteCard"
+            )
         }
 
         holder.editCardButton.setOnClickListener {
-            onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
-                holder,"EditCard")
+            onPostItemClickListener?.onPostItemClicked(
+                post.id, post.userEmail,
+                holder, "EditCard"
+            )
+        }
+
+        holder.link.setOnClickListener {
+            onPostItemClickListener?.onPostItemClicked(
+                post.link, post.userEmail,
+                holder, "LinkHandler"
+            )
         }
     }
 
     private fun handleObjectPulling(holder: PostViewHolder, userEmail: String, post: Post) {
         holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_blank)
         holder.imageThumbsDown.setImageResource(R.drawable.thumb_down_blank)
+        holder.textThumbsUp.text = post.thumbsUpUsers.size.toString()
+        holder.textThumbsDown.text = post.thumbsDownUsers.size.toString()
         when (userEmail) {
             in post.thumbsUpUsers -> {
                 holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_filled)

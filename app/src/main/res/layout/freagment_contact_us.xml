@@ -1,41 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp"
+    android:padding="50dp"
     android:background="@android:color/background_light">
 
     <TextView
         android:id="@+id/textViewSupportInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Support Information"
+        android:text="@string/support_information_string"
+        android:layout_gravity="center"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:paddingBottom="16dp"/>
 
     <TextView
-        android:id="@+id/textViewSupportEmail"
+        android:id="@+id/TeamMember"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email: support@example.com"
-        android:textSize="18sp"
-        android:drawableStart="@drawable/email"
-        android:drawablePadding="8dp"
-        android:layout_marginTop="8dp"/>
+        android:text="@string/teammembers_string"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:paddingBottom="16dp"/>
 
     <TextView
-        android:id="@+id/textViewSupportPhone"
+        android:id="@+id/NameTeamMeber1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/team_member1_name"
+        android:textSize="18sp"
+        android:drawablePadding="8dp"
+        android:layout_marginTop="8dp"
+        app:drawableStartCompat="@drawable/profile_icon" />
+
+    <TextView
+        android:id="@+id/textViewSupportEmail1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/team_member1_email"
+        android:textSize="18sp"
+        android:drawablePadding="8dp"
+        android:layout_marginTop="8dp"
+        app:drawableStartCompat="@drawable/email" />
+
+    <TextView
+        android:id="@+id/textViewSupportPhone1"
         android:layout_width="273dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:drawableStart="@drawable/phone"
         android:drawablePadding="8dp"
-        android:text="Phone: +1 (555) 123-4567"
-        android:textSize="18sp" />
+        android:text="@string/team_member1_phone_number"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/phone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/NameTeamMeber2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/team_member2_name"
+        android:textSize="18sp"
+        android:drawablePadding="8dp"
+        android:layout_marginTop="8dp"
+        app:drawableStartCompat="@drawable/profile_icon" />
+
+    <TextView
+        android:id="@+id/textViewSupportEmail2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/team_member2_email"
+        android:textSize="18sp"
+        android:drawablePadding="8dp"
+        android:layout_marginTop="8dp"
+        app:drawableStartCompat="@drawable/email" />
+
+    <TextView
+        android:id="@+id/textViewSupportPhone2"
+        android:layout_width="273dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawablePadding="8dp"
+        android:text="@string/team_member2_phone_number"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/phone" />
 
 </LinearLayout>

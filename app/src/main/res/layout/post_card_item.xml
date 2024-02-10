@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/border_background"
+        android:layout_margin="2dp">
 
         <ImageView
             android:id="@+id/card_image"
@@ -28,16 +28,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textAppearance="?attr/textAppearanceHeadline5"
-                />
+                android:textAppearance="?attr/textAppearanceHeadline5" />
 
             <TextView
                 android:id="@+id/card_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textAppearance="?attr/textAppearanceHeadline6"
-                />
+                android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
                 android:id="@+id/card_description"
@@ -45,38 +43,61 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?android:attr/textColorSecondary"
-                />
+                android:textColor="?android:attr/textColorSecondary" />
+
             <TextView
                 android:id="@+id/card_link"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="#2196F3"
-                />
+                android:textColor="#2196F3" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/text_thumbs_up"
+                android:layout_width="40dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="18dp"
+                android:gravity="center"
+                android:textColor="@color/blue"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/text_thumbs_down"
+                android:layout_width="40dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="24dp"
+                android:gravity="center"
+                android:textColor="@color/red"
+                android:text="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp">
 
             <ImageView
                 android:id="@+id/image_thumbs_up"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginEnd="15dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
                 android:src="@drawable/thumb_up_blank" />
 
             <ImageView
                 android:id="@+id/image_thumbs_down"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginEnd="15dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
                 android:src="@drawable/thumb_down_blank" />
 
             <View
@@ -89,8 +110,8 @@
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/delete_string"
                 android:backgroundTint="@color/teal_200"
+                android:text="@string/delete_string"
                 android:textColor="@color/white"
                 android:visibility="gone" />
 

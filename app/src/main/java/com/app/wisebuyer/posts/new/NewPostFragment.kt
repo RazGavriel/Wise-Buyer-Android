@@ -18,8 +18,11 @@ import com.app.wisebuyer.R
 import com.app.wisebuyer.posts.Post
 import com.app.wisebuyer.posts.ProductType
 import com.app.wisebuyer.utils.RequestStatus
+import com.app.wisebuyer.utils.closeKeyboard
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.app.wisebuyer.utils.showDialogResponse
+import com.app.wisebuyer.utils.validatePost
 
 class NewPostFragment : Fragment() {
 
@@ -95,14 +98,25 @@ class NewPostFragment : Fragment() {
     }
 
     private fun createNewPost() {
-        val newPost = Post(
-            title = title.text.toString(),
-            productType = ProductType.fromString(selectedProductType),
-            description = description.text.toString(),
-            link = link.text.toString(),
-            price = price.text.toString(),
-        )
-        newPostViewModel.createNewPost(newPost, attachedPicture)
+        val validationResponse =
+            validatePost(title.text.toString(), description.text.toString(),
+                         link.text.toString(), price.text.toString(),
+                         ::attachedPicture.isInitialized)
+
+        if (validationResponse == null) {
+            val newPost = Post(
+                title = title.text.toString(),
+                productType = ProductType.fromString(selectedProductType),
+                description = description.text.toString(),
+                link = link.text.toString(),
+                price = price.text.toString(),
+            )
+            newPostViewModel.createNewPost(newPost, attachedPicture)
+        }
+        else{
+            closeKeyboard(requireContext(), requireView())
+            showDialogResponse(validationResponse,  requireView())
+        }
     }
 
     private val pickImageContract = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->

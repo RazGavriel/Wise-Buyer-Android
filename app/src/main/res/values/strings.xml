@@ -66,4 +66,12 @@
     <string name="thumbs_down_string">Thumbs down</string>
     <string name="thumbs_up_string">Thumbs Up</string>
     <string name="logout_string">Logout</string>
+    <string name="team_member2_phone_number">Phone: (+972)50-960-5540</string>
+    <string name="team_member1_phone_number">Phone: (+972)54-831-5013</string>
+    <string name="team_member1_name">Name: Matan Shabi</string>
+    <string name="team_member1_email">Email: limmatan@gmail.com</string>
+    <string name="team_member2_name">Name: Raz Hagay Gavriel</string>
+    <string name="team_member2_email">Email: raz5338@gmail.com</string>
+    <string name="teammembers_string">TeamMembers:</string>
+    <string name="support_information_string">Support Information</string>
 </resources>

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.app.wisebuyer.R
 import com.app.wisebuyer.shared.PostBaseFragment
 import com.google.android.material.textfield.TextInputEditText
@@ -15,6 +16,7 @@ import com.google.android.material.textfield.TextInputEditText
 class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListener {
 
     private val postViewModel: PostViewModel by viewModels()
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchInput: TextInputEditText
 
@@ -32,6 +34,7 @@ class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListen
             initViews(view)
         }
         setupRecyclerView()
+        setupSwipeRefresh()
         checkInitializationShareViewModel()
         observeSearchPost()
 
@@ -47,6 +50,7 @@ class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListen
     private fun initViews(view: View) {
         recyclerView = view.findViewById(R.id.posts_recycler_view)
         searchInput = view.findViewById(R.id.search_input)
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
     }
 
     private fun setupRecyclerView() {
@@ -63,6 +67,14 @@ class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListen
             }
         });
     }
+
+    private fun setupSwipeRefresh(){
+        swipeRefreshLayout.setOnRefreshListener {
+            postViewModel.getPosts("", "")
+            swipeRefreshLayout.isRefreshing = false
+        }
+    }
+
     private fun observePostViewModel() {
         observePostViewModel(postViewModel, recyclerView,null)
     }
