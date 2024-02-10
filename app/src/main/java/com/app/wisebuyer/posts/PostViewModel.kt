@@ -94,6 +94,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         documentReference.delete()
             .addOnSuccessListener {
                 localDatabase.postDao().delete(postId)
+                val updatedPosts = _posts.value?.toMutableList() ?: mutableListOf()
+                updatedPosts.removeAll { it.id == postId }
+                _posts.value = updatedPosts
                 _requestStatus.value = RequestStatus.SUCCESS
             }
             .addOnFailureListener { e ->
