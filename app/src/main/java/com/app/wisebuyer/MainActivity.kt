@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<Toolbar>(R.id.toolbar)
             .setupWithNavController(navController, appBarConfiguration)
 
-        // hide toolbar in login page
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.loginFragment) {
                 toolbar.visibility = View.GONE

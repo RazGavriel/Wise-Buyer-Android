@@ -67,7 +67,6 @@ class LoginFragment : Fragment() {
             if (result.first.isNotEmpty()) {
                 updateSharedViewModel(result)
 
-                // change user name in header navigation drawer
                 (activity as MainActivity).updateHeaderUserName(
                     UserProperties(sharedViewModel.userMetaData.firstName,
                                    sharedViewModel.userMetaData.lastName))

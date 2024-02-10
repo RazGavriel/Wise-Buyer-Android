@@ -23,6 +23,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.app.wisebuyer.utils.showDialogResponse
 import com.app.wisebuyer.utils.validatePost
+import java.util.Date
 
 class NewPostFragment : Fragment() {
 
@@ -66,8 +67,6 @@ class NewPostFragment : Fragment() {
         submitButton = view.findViewById(R.id.post_submit)
         progressBar = view.findViewById(R.id.progress_bar_create_new_post)
 
-
-        // initialize spinner options
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
@@ -92,7 +91,6 @@ class NewPostFragment : Fragment() {
 
     private fun handleSubmitButton() {
         submitButton.setOnClickListener {
-            // TODO: add validations
             createNewPost()
         }
     }
@@ -110,6 +108,7 @@ class NewPostFragment : Fragment() {
                 description = description.text.toString(),
                 link = link.text.toString(),
                 price = price.text.toString(),
+                lastUpdate = Date().time
             )
             newPostViewModel.createNewPost(newPost, attachedPicture)
         }

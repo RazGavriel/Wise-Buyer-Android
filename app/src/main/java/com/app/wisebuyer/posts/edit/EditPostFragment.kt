@@ -74,8 +74,6 @@ class EditPostFragment : Fragment() {
         editPostButton = view.findViewById(R.id.post_submit)
         progressBar = view.findViewById(R.id.progress_bar_create_new_post)
 
-
-        // initialize spinner options
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,

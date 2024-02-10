@@ -18,7 +18,6 @@ import java.util.Date
 class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     private val db = FirebaseFirestore.getInstance()
-    // init room
     private val localDatabase = getWiseBuyerLocalDatabase(application.applicationContext)
 
     private val _requestStatus = MutableLiveData<RequestStatus>()
@@ -58,7 +57,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             .get()
             .addOnSuccessListener { documents ->
                 val postList = documents.toObjects(Post::class.java)
-
                 if (postList.size == 0){
                     _requestStatus.value = RequestStatus.SUCCESS
                     saveLastUpdateTimestamp(Date().time)
@@ -66,7 +64,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 val updatedPosts = _posts.value?.toMutableList() ?: mutableListOf()
-
                 postList.forEach { post: Post ->
                     localDatabase.postDao().upsert(post)
                     updatedPosts.removeAll { it.id == post.id }
@@ -79,6 +76,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
             .addOnFailureListener { exception ->
                 _requestStatus.value = RequestStatus.FAILURE
+
             }
             .addOnSuccessListener {
             }

@@ -30,12 +30,12 @@ fun isString(value: String): Boolean {
 
 fun validatePost(title : String, description :String, link: String,
                  price: String, pictureInitializeStatus: Boolean ): String? {
-    if (title.length > 20) {
-        return "Title should be less than 20 characters"
+    if (title.length > 30) {
+        return "Title should be less than 30 characters"
     }
 
-    if (description.length > 100) {
-        return "Description should not exceed 100 characters"
+    if (description.length > 150) {
+        return "Description should not exceed 150 characters"
     }
 
     if (!URLUtil.isValidUrl(link)) {
