@@ -62,6 +62,7 @@
     <string name="users_profile_default_string">User\'s Profile</string>
     <string name="search_string">search</string>
     <string name="delete_string">DELETE</string>
+    <string name="edit_string">EDIT</string>
     <string name="thumbs_down_string">Thumbs down</string>
     <string name="thumbs_up_string">Thumbs Up</string>
     <string name="logout_string">Logout</string>
