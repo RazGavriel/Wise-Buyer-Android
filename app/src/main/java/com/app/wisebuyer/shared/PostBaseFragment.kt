@@ -94,6 +94,8 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
     private fun handleUIAfterLike(result: LikeRequestStatus) {
         result.holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_blank)
         result.holder.imageThumbsDown.setImageResource(R.drawable.thumb_down_blank)
+        result.holder.textThumbsUp.text = result.thumbsUpUsers.size.toString()
+        result.holder.textThumbsDown.text = result.thumbsDownUsers.size.toString()
         when (sharedViewModel.userMetaData.email) {
             in result.thumbsUpUsers -> {
                 result.holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_filled)
