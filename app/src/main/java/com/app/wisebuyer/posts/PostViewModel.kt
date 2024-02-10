@@ -61,16 +61,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 Log.v("APP", documents.toString())
 
                 val postList = documents.toObjects(Post::class.java)
+                val updatedPosts = _posts.value?.toMutableList() ?: mutableListOf()
 
                 postList.forEach { post: Post ->
                     localDatabase.postDao().upsert(post)
+                    updatedPosts.removeAll { it.id == post.id }
+                    updatedPosts.add(post)
                 }
 
-                if (mode.isNotEmpty() && inputFromUser.isNotEmpty()) {
-                    _posts.value = localDatabase.postDao().getAllPostByUserEmail(inputFromUser);
-                }else {
-                    _posts.value = localDatabase.postDao().getAll()
-                }
+                _posts.value = updatedPosts
 
                 _requestStatus.value = RequestStatus.SUCCESS
 
@@ -90,6 +89,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         val documentReference = db.collection("Posts").document(postId)
         documentReference.delete()
             .addOnSuccessListener {
+                localDatabase.postDao().delete(postId)
                 _requestStatus.value = RequestStatus.SUCCESS
             }
             .addOnFailureListener { e ->
