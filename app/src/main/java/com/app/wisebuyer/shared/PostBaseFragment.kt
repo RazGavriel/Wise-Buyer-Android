@@ -126,6 +126,8 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
+        } else if (mode == "EditCard") {
+            findNavController().navigate(R.id.editPostFragment);
         }
     }
 

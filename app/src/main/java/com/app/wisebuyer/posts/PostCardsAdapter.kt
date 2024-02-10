@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.app.wisebuyer.R
 import com.app.wisebuyer.shared.PostBaseFragment
@@ -82,7 +83,8 @@ class PostCardsAdapter(private val posts: List<Post>)
         }
 
         holder.editCardButton.setOnClickListener {
-            Log.v("APP", "edit clicked")
+            onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
+                holder,"EditCard")
         }
     }
 
