@@ -96,11 +96,11 @@ class NewPostFragment : Fragment() {
 
     private fun createNewPost() {
         val newPost = Post(
-            title.text.toString(),
-            ProductType.fromString(selectedProductType),
-            description.text.toString(),
-            link.text.toString(),
-            price.text.toString(),
+            title = title.text.toString(),
+            productType = ProductType.fromString(selectedProductType),
+            description = description.text.toString(),
+            link = link.text.toString(),
+            price = price.text.toString(),
         )
         newPostViewModel.createNewPost(newPost, attachedPicture)
     }
