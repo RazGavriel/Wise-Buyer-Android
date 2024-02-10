@@ -14,8 +14,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val db = FirebaseFirestore.getInstance()
+    // init room
+    private val localDatabase = getWiseBuyerLocalDatabase(application.applicationContext)
+
     private val _requestStatus = MutableLiveData<RequestStatus>()
-    private val _posts = MutableLiveData<List<Post>>()
+    private val _posts = MutableLiveData<List<Post>>(localDatabase.postDao().getAll())
     private val _likeRequestStatus = MutableLiveData<LikeRequestStatus?>()
     private val _initializeUserDataStatus = MutableLiveData<UserMetaData?>()
     val posts: LiveData<List<Post>> get() = _posts
@@ -23,11 +28,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val likeRequestStatus: MutableLiveData<LikeRequestStatus?> get() = _likeRequestStatus
     val initializeUserDataStatus: MutableLiveData<UserMetaData?> get() = _initializeUserDataStatus
 
-    private val db = FirebaseFirestore.getInstance()
-
-    private val localDatabase = getWiseBuyerLocalDatabase(application.applicationContext)
 
     fun getPosts(mode: String, inputFromUser: String) {
+
         var query: Query = db.collection("Posts")
 
         if (mode.isNotEmpty() && inputFromUser.isNotEmpty()) {

@@ -8,5 +8,5 @@ fun getWiseBuyerLocalDatabase(context:Context): WiseBuyerLocalDatabase {
         context.applicationContext,
         WiseBuyerLocalDatabase::class.java,
         "wiseBuyer_database"
-    ).build()
+    ).allowMainThreadQueries().build()
 }
