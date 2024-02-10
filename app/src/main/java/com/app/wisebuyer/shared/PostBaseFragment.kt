@@ -1,5 +1,7 @@
 package com.app.wisebuyer.shared
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.app.wisebuyer.MainActivity
 import com.app.wisebuyer.R
@@ -139,6 +140,9 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
         } else if (mode == "EditCard") {
             val args = Bundle().apply { putString("postId", postId) }
             findNavController().navigate(R.id.editPostFragment, args);
+        } else if (mode == "LinkHandler"){
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(postId))
+            context?.startActivity(browserIntent)
         }
     }
 
