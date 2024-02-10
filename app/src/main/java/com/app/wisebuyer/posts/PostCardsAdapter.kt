@@ -1,11 +1,13 @@
 package com.app.wisebuyer.posts
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.app.wisebuyer.R
 import com.app.wisebuyer.shared.PostBaseFragment
@@ -38,6 +40,7 @@ class PostCardsAdapter(private val posts: List<Post>)
         val textThumbsUp: TextView = itemView.findViewById(R.id.text_thumbs_up)
         val textThumbsDown: TextView = itemView.findViewById(R.id.text_thumbs_down)
         val deleteCardButton: Button = itemView.findViewById(R.id.delete_card_button)
+        val editCardButton: Button = itemView.findViewById(R.id.edit_card_button)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -80,6 +83,11 @@ class PostCardsAdapter(private val posts: List<Post>)
             onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
                 holder,"DeleteCard")
         }
+
+        holder.editCardButton.setOnClickListener {
+            onPostItemClickListener?.onPostItemClicked(post.id, post.userEmail ,
+                holder,"EditCard")
+        }
     }
 
     private fun handleObjectPulling(holder: PostViewHolder, userEmail: String, post: Post) {
@@ -95,8 +103,13 @@ class PostCardsAdapter(private val posts: List<Post>)
                 holder.imageThumbsDown.setImageResource(R.drawable.thumb_down_filled)
             }
         }
-        if (post.userEmail == userEmail) { holder.deleteCardButton.visibility = View.VISIBLE }
-        else { holder.deleteCardButton.visibility = View.GONE }
+        if (post.userEmail == userEmail) {
+            holder.deleteCardButton.visibility = View.VISIBLE
+            holder.editCardButton.visibility = View.VISIBLE
+        }
+        else {
+            holder.deleteCardButton.visibility = View.GONE
+        }
     }
 
     override fun getItemCount(): Int {

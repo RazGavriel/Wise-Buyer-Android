@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.app.wisebuyer.MainActivity
 import com.app.wisebuyer.R
@@ -128,6 +129,9 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
+        } else if (mode == "EditCard") {
+            val args = Bundle().apply { putString("postId", postId) }
+            findNavController().navigate(R.id.editPostFragment, args);
         }
     }
 

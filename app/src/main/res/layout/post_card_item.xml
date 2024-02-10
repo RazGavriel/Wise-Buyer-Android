@@ -114,6 +114,17 @@
                 android:text="@string/delete_string"
                 android:textColor="@color/white"
                 android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/edit_card_button"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_string"
+                android:backgroundTint="@color/black"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/white"
+                android:visibility="gone" />
         </LinearLayout>
 
 
