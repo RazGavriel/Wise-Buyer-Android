@@ -35,6 +35,8 @@ class PostCardsAdapter(private val posts: List<Post>)
         val price: TextView = itemView.findViewById(R.id.card_price)
         val imageThumbsUp: ImageView = itemView.findViewById(R.id.image_thumbs_up)
         val imageThumbsDown: ImageView = itemView.findViewById(R.id.image_thumbs_down)
+        val textThumbsUp: TextView = itemView.findViewById(R.id.text_thumbs_up)
+        val textThumbsDown: TextView = itemView.findViewById(R.id.text_thumbs_down)
         val deleteCardButton: Button = itemView.findViewById(R.id.delete_card_button)
     }
 
@@ -83,6 +85,8 @@ class PostCardsAdapter(private val posts: List<Post>)
     private fun handleObjectPulling(holder: PostViewHolder, userEmail: String, post: Post) {
         holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_blank)
         holder.imageThumbsDown.setImageResource(R.drawable.thumb_down_blank)
+        holder.textThumbsUp.text = post.thumbsUpUsers.size.toString()
+        holder.textThumbsDown.text = post.thumbsDownUsers.size.toString()
         when (userEmail) {
             in post.thumbsUpUsers -> {
                 holder.imageThumbsUp.setImageResource(R.drawable.thumb_up_filled)
