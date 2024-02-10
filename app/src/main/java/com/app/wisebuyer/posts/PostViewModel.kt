@@ -55,12 +55,18 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         val lastUpdate: Long = getLastUpdateTimestamp()
 
         query.whereGreaterThanOrEqualTo("lastUpdate", lastUpdate)
-            .orderBy("lastUpdate", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { documents ->
                 Log.v("APP", documents.toString())
 
                 val postList = documents.toObjects(Post::class.java)
+
+                if (postList.size == 0){
+                    _requestStatus.value = RequestStatus.SUCCESS
+                    saveLastUpdateTimestamp(Date().time)
+                    return@addOnSuccessListener
+                }
+
                 val updatedPosts = _posts.value?.toMutableList() ?: mutableListOf()
 
                 postList.forEach { post: Post ->
@@ -69,10 +75,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                     updatedPosts.add(post)
                 }
 
-                _posts.value = updatedPosts
-
+                _posts.value = updatedPosts.sortedBy { it.createdAt }
                 _requestStatus.value = RequestStatus.SUCCESS
-
                 saveLastUpdateTimestamp(Date().time)
             }
             .addOnFailureListener { exception ->
@@ -110,7 +114,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 val (finalThumbsUpUsers, finalThumbsDownUsers) =
                     thumbsArrayHandler(mode, userEmail, thumbsUpUsers , thumbsDownUsers)
                 documentReference.update("thumbsUpUsers", finalThumbsUpUsers,
-                    "thumbsDownUsers", finalThumbsDownUsers)
+                    "thumbsDownUsers", finalThumbsDownUsers, "lastUpdate", Date().time)
                 val likeRequestStatus = LikeRequestStatus(
                     postEmail = result.data?.get("userEmail").toString(),
                     thumbsUpUsers = finalThumbsUpUsers, thumbsDownUsers = finalThumbsDownUsers,
