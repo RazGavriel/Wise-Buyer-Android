@@ -51,5 +51,9 @@
     <fragment
         android:id="@+id/editPostFragment"
         android:name="com.app.wisebuyer.posts.edit.EditPostFragment"
-        android:label="EditPostFragment" />
+        android:label="EditPostFragment" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
 </navigation>

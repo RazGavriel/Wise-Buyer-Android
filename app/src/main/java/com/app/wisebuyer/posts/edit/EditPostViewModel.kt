@@ -1,6 +1,7 @@
 package com.app.wisebuyer.posts.edit
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,55 +17,75 @@ class EditPostViewModel : ViewModel() {
     private val _requestStatus = MutableLiveData<RequestStatus>()
     val requestStatus: LiveData<RequestStatus> get() = _requestStatus
 
+    private val _post = MutableLiveData<Post>()
+    val post: LiveData<Post> get() = _post
+
     private val db = FirebaseFirestore.getInstance()
 
     private val storage = FirebaseStorage.getInstance()
 
-    fun createNewPost(post: Post, attachedPictureUri: Uri) {
+    fun updatePost(postId: String, post: Post, attachedPictureUri: Uri) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val imageRefLocation = "productPicture/${currentUser?.uid}/${attachedPictureUri.lastPathSegment}"
         val imageRef: StorageReference = storage.getReference(imageRefLocation)
 
-        imageRef.putFile(attachedPictureUri)
-            .addOnSuccessListener {
-                if (currentUser != null) {
-                    currentUser.email?.let {
-                        post.userEmail = it
-                        post.productPicture = imageRef.path
-                        savePost(post)
-                    }
-                } else {
-                    _requestStatus.value = RequestStatus.FAILURE
+        if (attachedPictureUri.toString().contains("productPicture/")) {
+            if (currentUser != null) {
+                currentUser.email?.let {
+                    post.userEmail = it
+                    post.productPicture = attachedPictureUri.toString()
+                    updatePostById(post)
                 }
-            }
-            .addOnFailureListener {
+            } else {
                 _requestStatus.value = RequestStatus.FAILURE
             }
-
-        _requestStatus.value = RequestStatus.IN_PROGRESS
-    }
-
-    private fun savePost(post: Post) {
-        val gson = Gson()
-        val postJson = gson.toJson(post)
-        db.collection("Posts")
-            .add(gson.fromJson(postJson, Map::class.java))
-            .addOnSuccessListener { documentReference ->
-                val postId = documentReference.id
-
-                // Update the 'id' field in the document with the document ID
-                db.collection("Posts")
-                    .document(postId)
-                    .update("id", postId)
-                    .addOnSuccessListener {
-                        _requestStatus.value = RequestStatus.SUCCESS
-                    }
-                    .addOnFailureListener {
+        } else {
+            imageRef.putFile(attachedPictureUri)
+                .addOnSuccessListener {
+                    if (currentUser != null) {
+                        currentUser.email?.let {
+                            post.userEmail = it
+                            post.productPicture = imageRef.path
+                            updatePostById(post)
+                        }
+                    } else {
                         _requestStatus.value = RequestStatus.FAILURE
                     }
+                }
+                .addOnFailureListener {
+                    _requestStatus.value = RequestStatus.FAILURE
+                }
+
+            _requestStatus.value = RequestStatus.IN_PROGRESS
+        }
+    }
+
+    private fun updatePostById(updatedPost: Post) {
+        val gson = Gson()
+        val postJson = gson.toJson(updatedPost)
+
+        db.collection("Posts")
+            .document(updatedPost.id)
+            .set(gson.fromJson(postJson, Map::class.java))
+            .addOnSuccessListener {
+                _requestStatus.value = RequestStatus.SUCCESS
             }
             .addOnFailureListener {
                 _requestStatus.value = RequestStatus.FAILURE
+            }
+    }
+
+    fun getPostById(postId: String) {
+        db.collection("Posts")
+            .document(postId)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val postData = documentSnapshot.toObject(Post::class.java)
+                    _post.value = postData!!
+                }
+            }.addOnFailureListener {
+                Log.v("APP", "FAILED")
             }
     }
 

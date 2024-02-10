@@ -2,6 +2,7 @@ package com.app.wisebuyer.posts.edit
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,23 +33,29 @@ class EditPostFragment : Fragment() {
     private lateinit var link: TextInputEditText
     private lateinit var price: TextInputEditText
     private lateinit var attachPictureButton: ImageButton
-    private lateinit var submitButton: MaterialButton
+    private lateinit var editPostButton: MaterialButton
     private lateinit var progressBar: ProgressBar
     private lateinit var attachedPicture: Uri
     private var selectedProductType : String = ProductType.OTHER.type
+    private lateinit var postId: String;
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+
         view = inflater.inflate(
             R.layout.fragment_edit_post, container, false
         )
 
         initViews(view)
-        handleSubmitButton()
-        observeCreatePostStatus()
+        handleUpdatePostButton()
+        observeEditPostStatus()
+        observeGetPost()
         handleAttachProductPicture()
+
+        postId = arguments?.getString("postId").toString()
+        postId?.let { newPostViewModel.getPostById(it) }
 
         return view
     }
@@ -60,7 +67,7 @@ class EditPostFragment : Fragment() {
         link = view.findViewById(R.id.post_link)
         price = view.findViewById(R.id.post_price)
         attachPictureButton = view.findViewById(R.id.post_attach_picture_button)
-        submitButton = view.findViewById(R.id.post_submit)
+        editPostButton = view.findViewById(R.id.post_submit)
         progressBar = view.findViewById(R.id.progress_bar_create_new_post)
 
 
@@ -87,22 +94,23 @@ class EditPostFragment : Fragment() {
         type.adapter = adapter
     }
 
-    private fun handleSubmitButton() {
-        submitButton.setOnClickListener {
+    private fun handleUpdatePostButton() {
+        editPostButton.setOnClickListener {
             // TODO: add validations
-            createNewPost()
+            updatePost()
         }
     }
 
-    private fun createNewPost() {
-        val newPost = Post(
-            title.text.toString(),
-            ProductType.fromString(selectedProductType),
-            description.text.toString(),
-            link.text.toString(),
-            price.text.toString(),
+    private fun updatePost() {
+        val editPost = Post(
+            id = postId,
+            title = title.text.toString(),
+            productType = ProductType.fromString(selectedProductType),
+            description = description.text.toString(),
+            link = link.text.toString(),
+            price = price.text.toString(),
         )
-        newPostViewModel.createNewPost(newPost, attachedPicture)
+        postId?.let { newPostViewModel.updatePost(it,editPost, attachedPicture) }
     }
 
     private val pickImageContract = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -116,18 +124,11 @@ class EditPostFragment : Fragment() {
         }
     }
 
-    private fun observeCreatePostStatus() {
+    private fun observeEditPostStatus() {
         newPostViewModel.requestStatus.observe(viewLifecycleOwner) { status: RequestStatus ->
             when(status) {
                 RequestStatus.IN_PROGRESS ->{
-                    title.visibility = View.GONE
-                    type.visibility = View.GONE
-                    description.visibility = View.GONE
-                    link.visibility = View.GONE
-                    price.visibility = View.GONE
-                    attachPictureButton.visibility = View.GONE
-                    submitButton.visibility = View.GONE
-                    progressBar.visibility = View.VISIBLE
+                    loading();
                 }
                 RequestStatus.SUCCESS ->
                     findNavController().popBackStack()
@@ -135,6 +136,27 @@ class EditPostFragment : Fragment() {
                 else -> {}
             }
         }
+    }
+
+    private fun observeGetPost() {
+        newPostViewModel.post.observe(viewLifecycleOwner) { post: Post ->
+            title.setText(post.title)
+            description.setText(post.description)
+            link.setText(post.link)
+            price.setText(post.price)
+            attachedPicture = Uri.parse(post.productPicture)
+        }
+    }
+
+    private fun loading(){
+        title.visibility = View.GONE
+        type.visibility = View.GONE
+        description.visibility = View.GONE
+        link.visibility = View.GONE
+        price.visibility = View.GONE
+        attachPictureButton.visibility = View.GONE
+        editPostButton.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {
