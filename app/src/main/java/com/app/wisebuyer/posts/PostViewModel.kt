@@ -22,7 +22,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val localDatabase = getWiseBuyerLocalDatabase(application.applicationContext)
 
     private val _requestStatus = MutableLiveData<RequestStatus>()
-    private val _posts = MutableLiveData<List<Post>>(localDatabase.postDao().getAll())
+    private val _posts = MutableLiveData<List<Post>>()
     private val _likeRequestStatus = MutableLiveData<LikeRequestStatus?>()
     private val _initializeUserDataStatus = MutableLiveData<UserMetaData?>()
     val posts: LiveData<List<Post>> get() = _posts
@@ -47,6 +47,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
         if (mode.isNotEmpty() && inputFromUser.isNotEmpty()) {
             query = query.whereEqualTo(mode, inputFromUser)
+            _posts.value = localDatabase.postDao().getAllPostByUserEmail(inputFromUser);
+        }else {
+            _posts.value = localDatabase.postDao().getAll()
         }
 
         val lastUpdate: Long = getLastUpdateTimestamp()
@@ -59,14 +62,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
                 val postList = documents.toObjects(Post::class.java)
 
-                val currentPosts = _posts.value?.toMutableList() ?: mutableListOf()
-
                 postList.forEach { post: Post ->
-                    currentPosts.add(post)
-                    localDatabase.postDao().insertAll(post)
+                    localDatabase.postDao().upsert(post)
                 }
 
-                _posts.value = currentPosts
+                if (mode.isNotEmpty() && inputFromUser.isNotEmpty()) {
+                    _posts.value = localDatabase.postDao().getAllPostByUserEmail(inputFromUser);
+                }else {
+                    _posts.value = localDatabase.postDao().getAll()
+                }
 
                 _requestStatus.value = RequestStatus.SUCCESS
 
