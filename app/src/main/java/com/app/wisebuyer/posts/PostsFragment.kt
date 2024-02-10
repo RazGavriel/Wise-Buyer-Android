@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.set
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -70,6 +71,7 @@ class PostsFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickListen
 
     private fun setupSwipeRefresh(){
         swipeRefreshLayout.setOnRefreshListener {
+            searchInput.text = Editable.Factory.getInstance().newEditable("")
             postViewModel.getPosts("", "")
             swipeRefreshLayout.isRefreshing = false
         }

@@ -1,16 +1,26 @@
 package com.app.wisebuyer.posts
 
+import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.app.wisebuyer.profile.UserMetaData
+import com.app.wisebuyer.room.getWiseBuyerLocalDatabase
 import com.app.wisebuyer.utils.RequestStatus
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.util.Date
 
-class PostViewModel : ViewModel() {
+class PostViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val db = FirebaseFirestore.getInstance()
+    // init room
+    private val localDatabase = getWiseBuyerLocalDatabase(application.applicationContext)
+
     private val _requestStatus = MutableLiveData<RequestStatus>()
     private val _posts = MutableLiveData<List<Post>>()
     private val _likeRequestStatus = MutableLiveData<LikeRequestStatus?>()
@@ -20,37 +30,73 @@ class PostViewModel : ViewModel() {
     val likeRequestStatus: MutableLiveData<LikeRequestStatus?> get() = _likeRequestStatus
     val initializeUserDataStatus: MutableLiveData<UserMetaData?> get() = _initializeUserDataStatus
 
-    private val db = FirebaseFirestore.getInstance()
+    private val preferences: SharedPreferences =
+        application.applicationContext.getSharedPreferences("POSTS", Context.MODE_PRIVATE)
 
-    private lateinit var auth: FirebaseAuth
+    private fun saveLastUpdateTimestamp(timestamp: Long) {
+        val editor = preferences.edit()
+        editor.putLong("POSTS_LAST_UPDATE", timestamp)
+        editor.apply()
+    }
 
-
+    private fun getLastUpdateTimestamp(): Long {
+        return preferences.getLong("POSTS_LAST_UPDATE", 0)
+    }
     fun getPosts(mode: String, inputFromUser: String) {
         var query: Query = db.collection("Posts")
 
         if (mode.isNotEmpty() && inputFromUser.isNotEmpty()) {
             query = query.whereEqualTo(mode, inputFromUser)
+            _posts.value = localDatabase.postDao().getAllPostByUserEmail(inputFromUser);
+        }else {
+            _posts.value = localDatabase.postDao().getAll()
         }
 
-        query.orderBy("createdAt", Query.Direction.DESCENDING)
+        val lastUpdate: Long = getLastUpdateTimestamp()
+
+        query.whereGreaterThanOrEqualTo("lastUpdate", lastUpdate)
             .get()
             .addOnSuccessListener { documents ->
                 Log.v("APP", documents.toString())
+
                 val postList = documents.toObjects(Post::class.java)
-                _posts.value = postList
+
+                if (postList.size == 0){
+                    _requestStatus.value = RequestStatus.SUCCESS
+                    saveLastUpdateTimestamp(Date().time)
+                    return@addOnSuccessListener
+                }
+
+                val updatedPosts = _posts.value?.toMutableList() ?: mutableListOf()
+
+                postList.forEach { post: Post ->
+                    localDatabase.postDao().upsert(post)
+                    updatedPosts.removeAll { it.id == post.id }
+                    updatedPosts.add(post)
+                }
+
+                _posts.value = updatedPosts.sortedByDescending { it.createdAt }
                 _requestStatus.value = RequestStatus.SUCCESS
+                saveLastUpdateTimestamp(Date().time)
             }
             .addOnFailureListener { exception ->
                 _requestStatus.value = RequestStatus.FAILURE
-            }.addOnSuccessListener {
+                Log.e("APP", "Error getting posts", exception)
+            }
+            .addOnSuccessListener {
                 Log.v("APP", "GET ALL POSTS")
             }
     }
+
 
     fun deletePost(postId: String) {
         val documentReference = db.collection("Posts").document(postId)
         documentReference.delete()
             .addOnSuccessListener {
+                localDatabase.postDao().delete(postId)
+                val updatedPosts = _posts.value?.toMutableList() ?: mutableListOf()
+                updatedPosts.removeAll { it.id == postId }
+                _posts.value = updatedPosts
                 _requestStatus.value = RequestStatus.SUCCESS
             }
             .addOnFailureListener { e ->
@@ -71,7 +117,7 @@ class PostViewModel : ViewModel() {
                 val (finalThumbsUpUsers, finalThumbsDownUsers) =
                     thumbsArrayHandler(mode, userEmail, thumbsUpUsers , thumbsDownUsers)
                 documentReference.update("thumbsUpUsers", finalThumbsUpUsers,
-                    "thumbsDownUsers", finalThumbsDownUsers)
+                    "thumbsDownUsers", finalThumbsDownUsers, "lastUpdate", Date().time)
                 val likeRequestStatus = LikeRequestStatus(
                     postEmail = result.data?.get("userEmail").toString(),
                     thumbsUpUsers = finalThumbsUpUsers, thumbsDownUsers = finalThumbsDownUsers,

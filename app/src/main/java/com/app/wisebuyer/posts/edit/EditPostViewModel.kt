@@ -68,7 +68,8 @@ class EditPostViewModel : ViewModel() {
             "productPicture" to updatedPost.productPicture,
             "productType" to updatedPost.productType,
             "link" to updatedPost.link,
-            "price" to updatedPost.price
+            "price" to updatedPost.price,
+            "lastUpdate" to updatedPost.lastUpdate
         )
 
         db.collection("Posts")
