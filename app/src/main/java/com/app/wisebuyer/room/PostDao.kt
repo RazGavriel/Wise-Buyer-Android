@@ -7,7 +7,7 @@ import com.app.wisebuyer.posts.Post
 
 @Dao
 interface PostDao {
-    @Query("SELECT * FROM post")
+    @Query("SELECT * FROM post ORDER BY createdAt desc")
     fun getAll(): List<Post>
 
     @Query("SELECT * FROM post WHERE userEmail = :email")
