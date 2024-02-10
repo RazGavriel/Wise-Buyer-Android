@@ -1,6 +1,7 @@
 package com.app.wisebuyer.utils
 
 import android.util.Patterns
+import android.webkit.URLUtil
 import android.widget.EditText
 import com.app.wisebuyer.login.UserCredentials
 
@@ -25,4 +26,30 @@ fun checkCredentials(
 
 fun isString(value: String): Boolean {
     return value.all { it.isLetter() }
+}
+
+fun validatePost(title : String, description :String, link: String,
+                 price: String, pictureInitializeStatus: Boolean ): String? {
+    if (title.length > 20) {
+        return "Title should be less than 20 characters"
+    }
+
+    if (description.length > 100) {
+        return "Description should not exceed 100 characters"
+    }
+
+    if (!URLUtil.isValidUrl(link)) {
+        return "Link is not a valid URL"
+    }
+
+    if (price.toInt() < 0) {
+        return "Price should be a positive integer"
+    }
+
+    if (!pictureInitializeStatus)
+    {
+        return "Picture is missing. Add a picture before proceeding."
+    }
+
+    return null
 }

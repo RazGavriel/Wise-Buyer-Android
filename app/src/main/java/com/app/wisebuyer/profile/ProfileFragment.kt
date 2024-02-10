@@ -32,6 +32,7 @@ import com.app.wisebuyer.shared.SharedViewModel
 import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.RequestStatus
 import com.app.wisebuyer.utils.isString
+import com.app.wisebuyer.utils.showDialogResponse
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -153,9 +154,9 @@ class ProfileFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickList
 
     private fun checkUserProperties(userProperties: UserProperties): Boolean {
         if (userProperties.firstName.isEmpty() || !isString(userProperties.firstName)) {
-            showDialogResponse("ERROR - Enter valid first name")
+            showDialogResponse("ERROR - Enter valid first name", requireView())
         } else if (userProperties.lastName.isEmpty() || !isString(userProperties.lastName)) {
-            showDialogResponse("ERROR - Enter valid last name")
+            showDialogResponse("ERROR - Enter valid last name", requireView())
         } else {
             return true
         }
@@ -168,12 +169,12 @@ class ProfileFragment : PostBaseFragment(), PostCardsAdapter.OnPostItemClickList
                 if (result != null) {
                     sharedViewModel.userMetaData.firstName = result.firstName
                     sharedViewModel.userMetaData.lastName = result.lastName
-                    showDialogResponse("Name changed successfully :)")
+                    showDialogResponse("Name changed successfully :)", requireView())
                     initializeUserName()
                     profileViewModel.changeNameResult.removeObservers(viewLifecycleOwner)
 
                 } else {
-                    showDialogResponse("Error while changing your name")
+                    showDialogResponse("Error while changing your name", requireView())
                 }
             }
         }

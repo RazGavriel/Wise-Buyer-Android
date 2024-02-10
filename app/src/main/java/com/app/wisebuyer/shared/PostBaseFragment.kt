@@ -1,15 +1,15 @@
 package com.app.wisebuyer.shared
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.app.wisebuyer.MainActivity
 import com.app.wisebuyer.R
@@ -22,7 +22,7 @@ import com.app.wisebuyer.singup.UserProperties
 import com.app.wisebuyer.utils.RequestStatus
 import com.app.wisebuyer.utils.closeKeyboard
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
+import com.app.wisebuyer.utils.showDialogResponse
 
 abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickListener {
     lateinit var sharedViewModel: SharedViewModel
@@ -58,7 +58,7 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
         postViewModel.requestStatus.observe(viewLifecycleOwner) { result ->
             if (result == RequestStatus.FAILURE) {
                 showDialogResponse("Something went wrong while processing your request. " +
-                        "Please try again later.")
+                        "Please try again later.", requireView())
             }
         }
     }
@@ -69,7 +69,7 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
                 handleUIAfterLike(result)
             } else {
                 showDialogResponse("Something went wrong while processing your request. " +
-                        "Please try again later.")
+                        "Please try again later.", requireView())
             }
         }
     }
@@ -109,16 +109,6 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
         else{ result.holder.deleteCardButton.visibility = View.GONE }
     }
 
-    open fun showDialogResponse(message: String) {
-        val rootView: View = requireView()
-        val snackBar = Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
-        val snackBarView: View = snackBar.view
-        snackBarView.setBackgroundColor(resources.getColor(R.color.black))
-        val textView: TextView = snackBarView.findViewById(com.google.android.material.R.id.snackbar_text)
-        textView.setTextColor(resources.getColor(R.color.white)) // Set your desired text color
-        snackBar.show()
-    }
-
     override fun onPostItemClicked(postId: String, postEmail: String,
         holder: PostCardsAdapter.PostViewHolder, mode: String)
     {
@@ -139,6 +129,9 @@ abstract class PostBaseFragment : Fragment(), PostCardsAdapter.OnPostItemClickLi
         } else if (mode == "EditCard") {
             val args = Bundle().apply { putString("postId", postId) }
             findNavController().navigate(R.id.editPostFragment, args);
+        } else if (mode == "LinkHandler"){
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(postId))
+            context?.startActivity(browserIntent)
         }
     }
 
