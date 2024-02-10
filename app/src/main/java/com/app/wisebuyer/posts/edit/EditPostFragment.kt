@@ -21,6 +21,7 @@ import com.app.wisebuyer.posts.ProductType
 import com.app.wisebuyer.utils.RequestStatus
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import java.util.Date
 
 class EditPostFragment : Fragment() {
 
@@ -109,6 +110,7 @@ class EditPostFragment : Fragment() {
             description = description.text.toString(),
             link = link.text.toString(),
             price = price.text.toString(),
+            lastUpdate = Date().time
         )
         postId?.let { newPostViewModel.updatePost(it,editPost, attachedPicture) }
     }
