@@ -75,7 +75,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                     updatedPosts.add(post)
                 }
 
-                _posts.value = updatedPosts.sortedBy { it.createdAt }
+                _posts.value = updatedPosts.sortedByDescending { it.createdAt }
                 _requestStatus.value = RequestStatus.SUCCESS
                 saveLastUpdateTimestamp(Date().time)
             }
