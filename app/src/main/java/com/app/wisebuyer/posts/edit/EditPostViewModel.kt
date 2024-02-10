@@ -92,8 +92,6 @@ class EditPostViewModel : ViewModel() {
                     val postData = documentSnapshot.toObject(Post::class.java)
                     _post.value = postData!!
                 }
-            }.addOnFailureListener {
-                Log.v("APP", "FAILED")
             }
     }
 

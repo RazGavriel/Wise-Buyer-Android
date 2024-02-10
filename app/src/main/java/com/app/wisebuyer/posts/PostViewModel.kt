@@ -57,8 +57,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         query.whereGreaterThanOrEqualTo("lastUpdate", lastUpdate)
             .get()
             .addOnSuccessListener { documents ->
-                Log.v("APP", documents.toString())
-
                 val postList = documents.toObjects(Post::class.java)
 
                 if (postList.size == 0){
@@ -81,10 +79,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
             .addOnFailureListener { exception ->
                 _requestStatus.value = RequestStatus.FAILURE
-                Log.e("APP", "Error getting posts", exception)
             }
             .addOnSuccessListener {
-                Log.v("APP", "GET ALL POSTS")
             }
     }
 
@@ -101,8 +97,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
             .addOnFailureListener { e ->
                 _requestStatus.value = RequestStatus.FAILURE
-            }.addOnSuccessListener {
-                Log.v("APP", "delete POST")
             }
     }
 
